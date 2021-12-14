@@ -1,0 +1,36 @@
+{
+  "name": "btrz-pdf",
+  "version": "0.0.1",
+  "description": "Generates pdf documents based on a liquid template",
+  "main": "src/index.js",
+  "scripts": {
+    "tdd": "mocha --recursive test/ -w",
+    "test": "mocha --recursive  test/",
+    "browserify": "browserify src/index.js --standalone BtrzPdf -p tinyify -o lib/client-standalone-min.js",
+    "commit-browserify": "git add lib/ && (git diff-index --quiet HEAD || git commit -m \"transpiled src\")",
+    "prebrowserify": "rm -rf lib/ && mkdir lib",
+    "preversion": "npm test && npm run browserify && npm run commit-browserify",
+    "postversion": "git push origin master && git push --tags",
+    "version": "git tag $1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Betterez/btrz-pdf.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Betterez/btrz-pdf/issues"
+  },
+  "homepage": "https://github.com/Betterez/btrz-pdf#readme",
+  "dependencies": {
+    "liquidjs": "^9.29.0",
+    "pdfmake": "^0.2.4"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "tinyify": "3.0.0"
+  }
+}
