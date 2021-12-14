@@ -10,7 +10,7 @@
     "commit-browserify": "git add lib/ && (git diff-index --quiet HEAD || git commit -m \"transpiled src\")",
     "prebrowserify": "rm -rf lib/ && mkdir lib",
     "preversion": "npm test && npm run browserify && npm run commit-browserify",
-    "postversion": "git push origin master && git push --tags",
+    "postversion": "git push origin main && git push --tags",
     "version": "git tag $1"
   },
   "repository": {
