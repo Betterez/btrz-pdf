@@ -18,6 +18,9 @@ function createPdfKitDocument(docDefinition) {
     // eslint-disable-next-line no-param-reassign
     docDefinition.pageBreakBefore = _pageBreakBefore;
   }
+  if (!docDefinition.defaultStyle) {
+    docDefinition.defaultStyle = defaultStyle();
+  }
   return printer.createPdfKitDocument(docDefinition);
 }
 
@@ -43,11 +46,12 @@ function createPdfBinary(pdfDoc, callback) {
 	});
 	doc.on("end", function () {
 		result = Buffer.concat(chunks);
-		callback("data:application/pdf;base64," + result.toString("base64"));
+		callback(null, "data:application/pdf;base64," + result.toString("base64"));
 	});
 	doc.end();
 }
 
 module.exports = {
-  createPdfBinary
+  createPdfBinary,
+  createPdfKitDocument
 }
