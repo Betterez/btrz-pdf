@@ -1,5 +1,6 @@
 const {Liquid} = require("liquidjs");
 const {Localizer} = require("./localizer.js");
+const {HorizontalLine} = require("./lines.js");
 const {createPdfBinary, createPdfKitDocument} = require("./pdf.js");
 
 module.exports = {
@@ -12,14 +13,19 @@ module.exports = {
     }
   },
   async returnPdfDocument(liquidTemplate, data) {
-    const documentDefinition = await this.toDocumentDefinition(liquidTemplate, data);
-    return createPdfKitDocument(documentDefinition);
+    try {
+      const documentDefinition = await this.toDocumentDefinition(liquidTemplate, data);
+      return createPdfKitDocument(documentDefinition);
+    } catch (err) {
+      throw err;
+    }
   },
   async toDocumentDefinition(liquidTemplate, data) {
     const engine = new Liquid();
     engine.plugin(Localizer);
-
+    engine.plugin(HorizontalLine);
     const str = await engine.parseAndRender(liquidTemplate, data);
+    console.log(str);
     return JSON.parse(str);
   }
 };

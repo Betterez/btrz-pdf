@@ -39,9 +39,11 @@ describe("index.js", () => {
         {%- if forloop.last == false -%}
         "{{ticket.fare}} and {%t ticket.fare %}",
         {%- else -%}
-        "{{ticket.fare}} and {%t ticket.fare %}"
+        "{{ticket.fare}} and {%t ticket.fare %}",
         {%- endif -%}
         {%- endfor -%}
+        {%- hline 356 '60,60,60' -%},
+        {%- hline  -%}
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -51,7 +53,15 @@ describe("index.js", () => {
         "=>h",
         "adult and =>adult",
         "child and =>child",
-        "person and =>person"
+        "person and =>person",
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(undefined);stroke-width:'60,60,60'' /></svg>",
+          "width": 356
+        },
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(undefined);stroke-width:undefined' /></svg>",
+          "width": 500
+        }
       ]
     });
   });
