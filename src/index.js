@@ -27,7 +27,7 @@ module.exports = {
     engine.plugin(HorizontalLine);
     engine.plugin(Barcode);
     const str = await engine.parseAndRender(liquidTemplate, data);
-    console.log(str);
+    // console.log(str);
     return JSON.parse(str);
   },
   defaultDocumentDefinition

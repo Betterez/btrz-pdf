@@ -52,7 +52,7 @@ describe("index.js", () => {
     expect(pdf).to.be.an.instanceOf(Object);
   });
 
-  it.only("should return a parsed liquidTemplate", async () => {
+  it("should return a parsed liquidTemplate", async () => {
     const pdf = require("../src/index");
     const template = `{
       "content": [
