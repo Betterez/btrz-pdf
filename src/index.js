@@ -1,7 +1,7 @@
 const {Liquid} = require("liquidjs");
 const {Localizer} = require("./localizer.js");
 const {HorizontalLine} = require("./lines.js");
-const {createPdfBinary, createPdfKitDocument} = require("./pdf.js");
+const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 
 module.exports = {
   async returnPdfBinary(liquidTemplate, data, cb) {
@@ -27,5 +27,6 @@ module.exports = {
     const str = await engine.parseAndRender(liquidTemplate, data);
     console.log(str);
     return JSON.parse(str);
-  }
+  },
+  defaultDocumentDefinition
 };

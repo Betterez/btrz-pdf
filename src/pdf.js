@@ -32,6 +32,52 @@ function defaultStyle() {
   };
 }
 
+function styles() {
+  return {
+    "header": {
+      fontSize: 16,
+      bold: true,
+      margin: [0, 0, 0, 10]
+    },
+    "subheader": {
+      fontSize: 14,
+      bold: true,
+      margin: [0, 20, 0, 0]
+    },
+    "tableHeader": {
+      fontSize: 8,
+      bold: true,
+      margin: [0, 4, 0, 0]
+    },
+    "table": {
+      fontSize: 8,
+      margin: [0, 8, 0, 0]
+    },
+    "attachedTable": {
+      fontSize: 8
+    },
+    "cell": {
+      margin: [0, 4, 0, 0]
+    },
+    "cellError": {
+      margin: [0, 4, 0, 0],
+      color: "#FF0000"
+    },
+    "cellMoney": {
+      margin: [0, 4, 0, 0],
+      alignment: "right"
+    },
+    "cellMoneyError": {
+      margin: [0, 4, 0, 0],
+      color: "#FF0000",
+      alignment: "right"
+    },
+    "footer": {
+      fontSize: 8
+    }
+  };
+}
+
 function createPdfBinary(pdfDoc, callback) {
   if (!pdfDoc.defaultStyle) {
     pdfDoc.defaultStyle = defaultStyle();
@@ -51,7 +97,16 @@ function createPdfBinary(pdfDoc, callback) {
 	doc.end();
 }
 
+function defaultDocumentDefinition() {
+  return {
+    defaultStyle: defaultStyle(),
+    styles: styles(),
+    content: []
+  };
+}
+
 module.exports = {
   createPdfBinary,
-  createPdfKitDocument
+  createPdfKitDocument,
+  defaultDocumentDefinition
 }

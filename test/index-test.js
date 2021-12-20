@@ -24,6 +24,29 @@ describe("index.js", () => {
       }
     }
   });
+
+
+  it.only("should return a default document definition", () => {
+    const pdf = require("../src/index.js");
+    const docDef = pdf.defaultDocumentDefinition();
+    expect(docDef).to.be.an("object");
+    expect(docDef.content).to.be.an("array");
+    expect(docDef.content).to.be.eql([]);
+    expect(docDef.defaultStyle).to.be.an("object");
+    expect(docDef.defaultStyle).to.be.eql({"font": "Helvetica", "fontSize": 10, "lineHeight": 1.3});
+    expect(docDef.styles).to.be.an("object");
+    expect(docDef.styles.header).to.be.eql({"bold": true, "fontSize": 16, "margin": [0, 0, 0, 10]});
+    expect(docDef.styles.subheader).to.be.eql({"bold": true, "fontSize": 14, "margin": [0, 20, 0, 0]});
+    expect(docDef.styles.tableHeader).to.be.eql({"bold": true, "fontSize": 8, "margin": [0, 4, 0, 0]});
+    expect(docDef.styles.table).to.be.eql({"fontSize": 8, "margin": [0, 8, 0, 0]});
+    expect(docDef.styles.attachedTable).to.be.eql({"fontSize": 8});
+    expect(docDef.styles.cell).to.be.eql({"margin": [0, 4, 0, 0]});
+    expect(docDef.styles.cellError).to.be.eql({"margin": [0, 4, 0, 0], "color": "#FF0000"});
+    expect(docDef.styles.cellMoney).to.be.eql({"margin": [0, 4, 0, 0], "alignment": "right"});
+    expect(docDef.styles.cellMoneyError).to.be.eql({"margin": [0, 4, 0, 0], "color": "#FF0000", "alignment": "right"});
+    expect(docDef.styles.footer).to.be.eql({"fontSize": 8});
+  });
+
   it("should return an instance of pdf", () => {
     const pdf = require("../src/index");
     expect(pdf).to.be.an.instanceOf(Object);
