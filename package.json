@@ -25,7 +25,8 @@
   "homepage": "https://github.com/Betterez/btrz-pdf#readme",
   "dependencies": {
     "liquidjs": "^9.29.0",
-    "pdfmake": "^0.2.4"
+    "pdfmake": "^0.2.4",
+    "symbology": "^3.0.8"
   },
   "devDependencies": {
     "browserify": "^17.0.0",

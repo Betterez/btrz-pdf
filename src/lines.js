@@ -5,8 +5,8 @@ function HorizontalLine(engine) {
       try {
         const args = (tagToken.args || "").split(" ");
         this.width = args[0] || 500;
-        this.weight = args[1];
-        this.rgb = args[2];
+        this.weight = args[1] || 1;
+        this.rgb = args[2] || "0,0,0";
       } catch (err) {
         this.width = 500;
         this.weight = 1;
