@@ -6,9 +6,30 @@ describe("index.js", () => {
       transaction: {
         _id: "5c9f8f8f8f8f8f8f8f8f8f8",
       },
+      providerPreferences: {
+        preferences: {
+          multiCurrency: true,
+          supportedCurrencies: [
+            {
+              isocode: "USD",
+              symbol: "$",
+              enabled: true,
+              printSymbol: true
+            },
+            {
+              isocode: "CAD",
+              symbol: "$",
+              enabled: true,
+              printSymbol: true
+
+            }
+          ]
+        }
+      }, 
       tickets: [
         {
           fare: "adult",
+          total: 2800000
         },
         {
           fare: "child",
@@ -17,6 +38,16 @@ describe("index.js", () => {
           fare: "person", 
         }
       ],
+      ticket: {
+        fare: "adult",
+        total: 2800000,
+        displayCurrency: {
+          isocode: "CAD",
+          symbol: "$",
+          buy: 1,
+          sell: 1,
+        }
+      },
       localizer: {
         get: (key) => {
           if (key === "html") {
@@ -75,7 +106,10 @@ describe("index.js", () => {
         {%- hline  -%},
         {%- barcode -%},
         {%- barcode 1234 code128 10 2 2 -%},
-        {%- h 'html' -%}
+        {%- h 'html' -%},
+        "{%- money ticket total -%}",
+        "{%- curcySymbol ticket -%}",
+        "{%- curcyIso ticket -%}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -102,7 +136,10 @@ describe("index.js", () => {
           "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAAAoCAYAAADufVZCAAAAAklEQVR4AewaftIAAADcSURBVO3BsY0EQRDDQKrzz1nvjrXA4R0ZrApQPrTllYRXW74k4Rdt+ZKEV1teSfjSli9J+EVbviTh1ZZfJOHVllcSvrTlF0l4teVLEl5t+ZKE/2jLKwlf2vKLJPyiLa8kvNrySsKXQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMPxSXLk+8Qj8BAAAAAElFTkSuQmCC",
           "width": 2
         },
-        {"style": "header1", "text": "Hello"},{"text": ""},{"text": "something"},{"text": ""},{"bold": "true", "text": "html"},{"text": ""},{"style": "italic", "text": "Italix"}
+        {"style": "header1", "text": "Hello"},{"text": ""},{"text": "something"},{"text": ""},{"bold": "true", "text": "html"},{"text": ""},{"style": "italic", "text": "Italix"},
+        "28.00",
+        "$",
+        "CAD"
       ]
     });
   });

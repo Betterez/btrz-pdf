@@ -5,7 +5,6 @@ function Localizer(engine) {
     },
     render: async function(ctx) {
         let str = await this.liquid.evalValue(this.str, ctx);
-        console.log("STR", str);
         if (ctx && ctx.environments && ctx.environments.localizer && ctx.environments.localizer.get) {
           return ctx.environments.localizer.get(str);
         }
