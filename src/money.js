@@ -315,7 +315,69 @@ var fixedAmountsMatchForCurrency = function fixedAmountsMatchForCurrency(baseAmo
   return targetCurrencyAmount === baseToCurrencyAmount;
 };
 
-function getCurrencySymbol(isocode, currencies) {
+function getCurrencySymbol(isocode) {
+  const currencies = [
+    {
+      isocode: "USD",
+      symbol: "$",
+      printSymbol: true
+    },
+    {
+      isocode: "AUD",
+      symbol: "$",
+      printSymbol: true
+    },
+    {
+      isocode: "CAD",
+      symbol: "$",
+      printSymbol: true
+    },
+    {
+      isocode: "EUR",
+      symbol: "€",
+      printSymbol: true
+    },
+    {
+      isocode: "GBP",
+      symbol: "£",
+      printSymbol: true
+    },
+    {
+      isocode: "NZD",
+      symbol: "$",
+      printSymbol: true
+    },
+    {
+      isocode: "MXN",
+      symbol: "$",
+      printSymbol: true
+    },
+    {
+      isocode: "HNL",
+      symbol: "L",
+      printSymbol: true
+    },
+    {
+      isocode: "NIO",
+      symbol: "C$",
+      printSymbol: true
+    },
+    {
+      isocode: "CRC",
+      symbol: "₡",
+      printSymbol: false
+    },
+    {
+      isocode: "GTQ",
+      symbol: "Q",
+      printSymbol: true
+    },
+    {
+      isocode: "PAB",
+      symbol: "B/.",
+      printSymbol: true
+    }
+  ]
   const trimIsocode = isocode ? isocode.trim() : "";
   const curcy = currencies.find((cur) => {
     return cur.isocode === trimIsocode;
@@ -358,7 +420,7 @@ function CurcySymbol(engine) {
       if (mc && ctx && ctx.environments && ctx.environments[this.item]) {
         const mcForItem = mc.forItem(ctx.environments[this.item]);
         const isocode = mcForItem.displayCurrencyCode || " ";
-        return getCurrencySymbol(isocode, mc.currencies)
+        return getCurrencySymbol(isocode)
       }
       return "";
     }
