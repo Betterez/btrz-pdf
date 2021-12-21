@@ -2,6 +2,7 @@ const {Liquid} = require("liquidjs");
 const {Localizer} = require("./localizer.js");
 const {HorizontalLine} = require("./lines.js");
 const {Barcode} = require("./barcode.js");
+const {Html} = require("./html.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 
 module.exports = {
@@ -24,10 +25,11 @@ module.exports = {
   async toDocumentDefinition(liquidTemplate, data) {
     const engine = new Liquid();
     engine.plugin(Localizer);
+    engine.plugin(Html);
     engine.plugin(HorizontalLine);
     engine.plugin(Barcode);
     const str = await engine.parseAndRender(liquidTemplate, data);
-    // console.log(str);
+    console.log(str);
     return JSON.parse(str);
   },
   defaultDocumentDefinition

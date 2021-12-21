@@ -19,6 +19,12 @@ describe("index.js", () => {
       ],
       localizer: {
         get: (key) => {
+          if (key === "html") {
+            return `<h1>Hello</h1><br/>
+            something
+            <b>html</b>
+            <i>Italix</i>`;
+          }
           return `=>${key}`;
         }
       }
@@ -52,7 +58,7 @@ describe("index.js", () => {
     expect(pdf).to.be.an.instanceOf(Object);
   });
 
-  it("should return a parsed liquidTemplate", async () => {
+  it.only("should return a parsed liquidTemplate", async () => {
     const pdf = require("../src/index");
     const template = `{
       "content": [
@@ -68,7 +74,8 @@ describe("index.js", () => {
         {%- hline 356 2 60,60,60 -%},
         {%- hline  -%},
         {%- barcode -%},
-        {%- barcode 1234 code128 10 2 2 -%}
+        {%- barcode 1234 code128 10 2 2 -%},
+        {%- h 'html' -%}
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -94,7 +101,8 @@ describe("index.js", () => {
         {
           "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAAAoCAYAAADufVZCAAAAAklEQVR4AewaftIAAADcSURBVO3BsY0EQRDDQKrzz1nvjrXA4R0ZrApQPrTllYRXW74k4Rdt+ZKEV1teSfjSli9J+EVbviTh1ZZfJOHVllcSvrTlF0l4teVLEl5t+ZKE/2jLKwlf2vKLJPyiLa8kvNrySsKXQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMPxSXLk+8Qj8BAAAAAElFTkSuQmCC",
           "width": 2
-        }
+        },
+        {"style": "header1", "text": "Hello"},{"text": ""},{"text": "something"},{"text": ""},{"bold": "true", "text": "html"},{"text": ""},{"style": "italic", "text": "Italix"}
       ]
     });
   });
