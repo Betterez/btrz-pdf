@@ -8,6 +8,13 @@ describe("index.js", () => {
       },
       providerPreferences: {
         preferences: {
+          timeFormat: "h:MM TT",
+          timeZone: {
+            name: "(UTC-5:00) New York (United States), Toronto (Canada)",
+            daylight: true,
+            tz: "America/Toronto"
+          },
+          dateFormat: "mm/dd/yyyy",
           multiCurrency: true,
           supportedCurrencies: [
             {
@@ -35,17 +42,30 @@ describe("index.js", () => {
           fare: "child",
         },
         {
-          fare: "person", 
+          fare: "person",
         }
       ],
       ticket: {
         fare: "adult",
         total: 2800000,
+        taxes: [],
+        ssrs: [
+          {
+            subTotal: 2800000,
+          },
+          {
+            subTotal: 3100000,
+          }
+        ],
         displayCurrency: {
           isocode: "CAD",
           symbol: "$",
           buy: 1,
           sell: 1,
+        },
+        createdAt: {
+          value: "2021-12-21T16:38:00.488Z",
+          offset: 0
         }
       },
       localizer: {
@@ -109,7 +129,14 @@ describe("index.js", () => {
         {%- h 'html' -%},
         "{%- money ticket total -%}",
         "{%- curcySymbol ticket -%}",
-        "{%- curcyIso ticket -%}"
+        "{%- curcyIso ticket -%}",
+        "{%- moneyReduce ticket ssrs subTotal -%}",
+        "{%- humanDateTime ticket createdAt %}",
+        "{%- humanDate ticket createdAt %}",
+        "{%- dateTime ticket createdAt %}",
+        "{%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss %}",
+        "{%- dateF ticket createdAt %}",
+        "{%- timeF ticket createdAt %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -139,7 +166,14 @@ describe("index.js", () => {
         {"style": "header1", "text": "Hello"},{"text": ""},{"text": "something"},{"text": ""},{"bold": "true", "text": "html"},{"text": ""},{"style": "italic", "text": "Italix"},
         "28.00",
         "$",
-        "CAD"
+        "CAD",
+        "59.00",
+        "Tue Dec 21, 2021 11:38 AM",
+        "Tue Dec 21, 2021",
+        "12/21/2021 11:38 AM",
+        "12/21/2021 11:38:00",
+        "12/21/2021",
+        "11:38 AM"
       ]
     });
   });

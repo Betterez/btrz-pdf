@@ -3,7 +3,8 @@ const {Localizer} = require("./localizer.js");
 const {HorizontalLine} = require("./lines.js");
 const {Barcode} = require("./barcode.js");
 const {Html} = require("./html.js");
-const {Money, CurcySymbol, CurcyIso} = require("./money.js");
+const {Money, CurcySymbol, CurcyIso, MoneyReduce} = require("./money.js");
+const {DateF, TimeF, DateTime, HumanDate, HumanDateTime} = require("./dateFormat.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 
 module.exports = {
@@ -32,6 +33,12 @@ module.exports = {
     engine.plugin(Money);
     engine.plugin(CurcySymbol);
     engine.plugin(CurcyIso);
+    engine.plugin(MoneyReduce);
+    engine.plugin(DateF);
+    engine.plugin(TimeF);
+    engine.plugin(DateTime);
+    engine.plugin(HumanDate);
+    engine.plugin(HumanDateTime);
     const str = await engine.parseAndRender(liquidTemplate, data);
     console.log(str);
     return JSON.parse(str);
