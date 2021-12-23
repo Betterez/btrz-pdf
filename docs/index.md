@@ -170,13 +170,13 @@ Parameters
 It will use the value of ticket.code to generate the barcode with all the defaults
 
 ```liquid
-{% barcode ticket.code %} 
+&lbrace;% barcode ticket.code %&rbrace;
 ```
 
 It will use the value given and use generate a 'code11' barcode with a height of 50 and a width of 300
 
 ```liquid
-{% barcode 1234 code11 50 300 %} 
+&lbrace;% barcode 1234 code11 50 300 %&rbrace; 
 ```
 
 ### Supported types
@@ -189,11 +189,11 @@ While symbology supports QRCODE PDFMake also had support for QR natively and we 
 Returns a date formatted by the given format from a property of an object given to the liquid template data.
 
 ```liquid
-{%- dateTime ticket createdAt %} //"12/21/2021 11:38 AM"
+&lbrace;%- dateTime ticket createdAt %&rbrace; //"12/21/2021 11:38 AM"
 ```
 
 ```liquid
-{%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss %} //"12/21/2021 11:38:00"
+&lbrace;%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss %&rbrace; //"12/21/2021 11:38:00"
 ```
 
 Parameters
@@ -237,7 +237,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- dateF ticket createdAt %} //"12/21/2021"
+&lbrace;%- dateF ticket createdAt %&rbrace; //"12/21/2021"
 ```
 
 * ## timeF
@@ -252,7 +252,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- timeF ticket createdAt %} //"11:38 AM"
+&lbrace;%- timeF ticket createdAt %&rbrace; //"11:38 AM"
 ```
 
 * ## humanDate
@@ -271,7 +271,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- humanDate ticket createdAt %} //"Tue Dec 21, 2021"
+&lbrace;%- humanDate ticket createdAt %&rbrace; //"Tue Dec 21, 2021"
 ```
 
 * ## humanDateTime
@@ -290,7 +290,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- humanDateTime ticket createdAt %} //"Tue Dec 21, 2021 11:38 AM"
+&lbrace;%- humanDateTime ticket createdAt %&rbrace; //"Tue Dec 21, 2021 11:38 AM"
 ```
 
 * ## h
@@ -304,7 +304,7 @@ Parameters
 | property | this will be "evaluated" from the data provided to the liquid template | Y |
 
 ```javascript
-{% h ticket.lexiconKeys.terms %} //If will get the string in the property and parse it
+&lbrace;% h ticket.lexiconKeys.terms %&rbrace; //If will get the string in the property and parse it
 ```
 
 ### Supported html tags
@@ -328,7 +328,7 @@ Parameters
 | rgb | the colour of the line | N | 0,0,0
 
 ```liquid
-{%- hline 475 2 255,112,0 -%} //Generates an svg line with the width, weight and colour given
+&lbrace;%- hline 475 2 255,112,0 -%&rbrace; //Generates an svg line with the width, weight and colour given
 ```
 
 ```json
@@ -353,11 +353,11 @@ Parameters
 | property | the key for the lexicon | Y |
 
 ```liquid
-{% t 'issued' %} //Will return the value on the lexicon with the 'issued' key
+&lbrace;% t 'issued' %&rbrace; //Will return the value on the lexicon with the 'issued' key
 ```
 
 ```liquid
-{% t fare.lexiconKeys.description %} //Will return the value on the lexicon with the key stored in the `data.fare.lexiconKeys.description` property
+&lbrace;% t fare.lexiconKeys.description %&rbrace; //Will return the value on the lexicon with the key stored in the `data.fare.lexiconKeys.description` property
 ```
 
 * ## money
@@ -372,7 +372,7 @@ Parameters
 | propName | The name of the property of the item | N | total
 
 ```liquid
-"{%- money ticket total -%}" //Given that ticket.total is 2800000 returns "28.00"
+"&lbrace;%- money ticket total -%&rbrace;" //Given that ticket.total is 2800000 returns "28.00"
 ```
 
 * ## moneyReduce
@@ -388,7 +388,7 @@ Parameters
 | innerPropName | The name of the property in the objects in the collection | N | calculated
 
 ```liquid
-"{%- money ticket fees subTotal -%}"
+"&lbrace;%- money ticket fees subTotal -%&rbrace;"
 ```
 
 * ## curcySymbol
@@ -402,7 +402,7 @@ Parameters
 | item | An object in the data given to the liquid template | N | ticket
 
 ```liquid
-{%- curcySymbol ticket -%}",
+&lbrace;%- curcySymbol ticket -%&rbrace;",
 ```
 
 * ## curcyIso
@@ -416,5 +416,5 @@ Parameters
 | item | An object in the data given to the liquid template | N | ticket
 
 ```liquid
-{%- curcyIso ticket -%}
+&lbrace;%- curcyIso ticket -%&rbrace;
 ```
