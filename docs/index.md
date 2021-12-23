@@ -169,8 +169,8 @@ Parameters
 
 It will use the value of ticket.code to generate the barcode with all the defaults
 
-```
-{% barcode ticket.code %}
+```liquid
+{% raw %} {% barcode ticket.code %} {% endraw %}
 ```
 
 It will use the value given and use generate a 'code11' barcode with a height of 50 and a width of 300
