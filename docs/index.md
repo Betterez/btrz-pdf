@@ -1,4 +1,4 @@
-# btrz-pdf
+## Purpose
 
 Create pdf documents from liquid templates.
 
