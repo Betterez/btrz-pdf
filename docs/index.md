@@ -5,7 +5,7 @@ layout: default
 
 Create pdf documents from liquid templates.
 
-This library uses [https://liquidjs.com/](LiquidJs), [https://symbology.dev/](Symbology), [https://www.npmjs.com/package/bz-date](BzDate), [https://www.npmjs.com/package/btrz-formatter](btrz-formatter) and [https://pdfmake.github.io/docs/0.1/](PDFmake) and link them togethers while adding some helpers to easily generate PDFs from templates.
+This library uses [LiquidJS](https://liquidjs.com/), [Symbology](https://symbology.dev/), [Bz-Date](https://www.npmjs.com/package/bz-date), [btrz-formatter](https://www.npmjs.com/package/btrz-formatter) and [PDFMake](https://pdfmake.github.io/docs/0.1/) and link them togethers while adding some helpers to easily generate PDFs from templates.
 
 ## Install
 
