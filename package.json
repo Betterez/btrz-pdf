@@ -6,10 +6,7 @@
   "scripts": {
     "tdd": "mocha --recursive test/ -w",
     "test": "mocha --recursive  test/",
-    "browserify": "browserify src/index.js --standalone BtrzPdf -p tinyify -o lib/client-standalone-min.js",
-    "commit-browserify": "git add lib/ && (git diff-index --quiet HEAD || git commit -m \"transpiled src\")",
-    "prebrowserify": "rm -rf lib/ && mkdir lib",
-    "preversion": "npm test && npm run browserify && npm run commit-browserify",
+    "preversion": "npm test",
     "postversion": "git push origin main && git push --tags",
     "version": "git tag $1"
   },
