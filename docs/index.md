@@ -169,8 +169,8 @@ Parameters
 
 It will use the value of ticket.code to generate the barcode with all the defaults
 
-```liquid
-&lbrace;% barcode ticket.code %&rbrace;
+```
+{% barcode ticket.code %}
 ```
 
 It will use the value given and use generate a 'code11' barcode with a height of 50 and a width of 300
