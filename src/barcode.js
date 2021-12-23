@@ -1,28 +1,7 @@
 const {SymbologyType, createStream, OutputType} = require("symbology");
 
 function getCode(code) {
-  switch (code) {
-    case "code11":  
-      return SymbologyType.CODE11;
-    case "code128":
-      return SymbologyType.CODE128;
-    case "code39":
-      return SymbologyType.CODE39;
-    case "code93":
-      return SymbologyType.CODE93;
-    case "ean13":
-      return SymbologyType.EAN13;
-    case "ean8":
-      return SymbologyType.EAN8;
-    case "upca":
-      return SymbologyType.UPCA;
-    case "upce":
-      return SymbologyType.UPCE;
-    case "qrcode":
-      return SymbologyType.QRCODE;
-    default:
-      return SymbologyType.CODE128;
-  }
+  return SymbologyType[code.toUpperCase()];
 }
 
 function Barcode(engine) {

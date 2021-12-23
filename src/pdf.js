@@ -44,6 +44,10 @@ function styles() {
       bold: true,
       margin: [0, 20, 0, 0]
     },
+    "innerheader": {
+      fontSize: 12,
+      bold: true
+    },
     "tableHeader": {
       fontSize: 8,
       bold: true,

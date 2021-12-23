@@ -40,7 +40,6 @@ function HumanDateTime(engine) {
   });
 }
 
-
 function HumanDate(engine) {
   this.registerTag("humanDate", {
     parse: function(tagToken, remainTokens) {

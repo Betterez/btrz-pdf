@@ -1,11 +1,11 @@
 function getBoldToken(token) {
   const txt = token.replace(/<\/b>/ig, '<b>').replace(/<b>/ig, '');
-  return `{"bold": "true", "text": "${txt}"}`;
+  return `{"bold": true, "text": "${txt}"}`;
 }
 
 function getItalicToken(token) {
   const txt = token.replace(/<\/i>/ig, '<i>').replace(/<i>/ig, '');
-  return `{"style": "italic", "text": "${txt}"}`;
+  return `{"italics": true, "text": "${txt}"}`;
 }
 
 function getHeaderToken(token, size) {
@@ -16,7 +16,16 @@ function getHeaderToken(token, size) {
     .replace(/<h2>/ig, '<h>')
     .replace(/<h3>/ig, '<h>')
     .replace(/<h>/ig, '');
-  return `{"style": "header${size}", "text": "${txt}"}`;
+  if (size === '1') {
+    return `{"style": "header", "text": "${txt}"}`;
+  }
+  if (size === '2') {
+    return `{"style": "subheader", "text": "${txt}"}`;
+  }
+  if (size === '3') {
+    return `{"style": "innerheader", "text": "${txt}"}`;
+  }
+  return `{"text": "${txt}"}`;
 }
 
 function getTokenInfo(token) {
