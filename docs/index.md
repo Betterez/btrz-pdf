@@ -1,4 +1,7 @@
-## Purpose
+---
+title: Purpose
+layout: default
+---
 
 Create pdf documents from liquid templates.
 
