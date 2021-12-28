@@ -19,6 +19,27 @@ The documents generated only use Helvetica fonts.
 
 ## Methods
 
+* returnPdfBuffer
+
+Async method that returns a buffer, best used with Express to return the PDF in the response or to generate documents to be merged later on.
+
+Parameters
+
+| name | definition |
+|------|------|
+| liquidTemplate | object representing a pdfmake document with valid liquidSyntax |
+| data | Object with data needed by the liquid template |
+
+* mergePDFBuffers(buffers)
+
+Async method that combines buffers into PDF documents
+
+Parameters
+
+| name | definition |
+|------|------|
+| buffers | An array of buffers |
+
 * returnPdfBinary(liquidTemplate, data, cb)
 
 Async method using a cb to return a buffer, best used with Express to return the PDF in the response.
@@ -118,6 +139,51 @@ Response
 ```
 
 ## Usage
+
+
+```javascript
+  const btrzPdf = require("btrz-pdf");
+
+  //Returns a PDF as data with Express
+  async returnPDF(req, res) {
+    try {
+      const buffer = await PDF.returnPdfBuffer(template, data);
+      res.setHeader("Content-Disposition", `attachment;filename="${filename}.pdf"`)
+      res.setHeader("Content-type", "application/pdf");
+      res.write(buffer);
+      res.send();
+      return; 
+    } catch (err) {
+      res.status(500).send(error);
+    }
+  }
+
+```
+
+
+```javascript
+  const btrzPdf = require("btrz-pdf");
+
+  //Returns a PDF as data with Express
+  async mergeAndReturnPdf(req, res) {
+    try {
+      const items = [item1, item2, item3];
+      const buffers = Promise.all(items.map((item) => {
+        data.item;
+        return PDF.returnPdfBuffer(template, data);
+      }))
+      const result = await PDF.mergePdfBufffers(buffers);
+      res.setHeader("Content-Disposition", `attachment;filename="${filename}.pdf"`)
+      res.setHeader("Content-type", "application/pdf");
+      res.write(result);
+      res.send();
+      return;
+    } catch (err) {
+      res.status(500).send(error);
+    }
+  }
+
+```
 
 ```javascript
   const btrzPdf = require("btrz-pdf");
