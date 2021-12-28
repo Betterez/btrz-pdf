@@ -1,8 +1,11 @@
-# btrz-pdf
+---
+title: Purpose
+layout: default
+---
 
 Create pdf documents from liquid templates.
 
-This library uses [https://liquidjs.com/](LiquidJs), [https://symbology.dev/](Symbology), [https://www.npmjs.com/package/bz-date](BzDate), [https://www.npmjs.com/package/btrz-formatter](btrz-formatter) and [https://pdfmake.github.io/docs/0.1/](PDFmake) and link them togethers while adding some helpers to easily generate PDFs from templates.
+This library uses [LiquidJS](https://liquidjs.com/), [Symbology](https://symbology.dev/), [Bz-Date](https://www.npmjs.com/package/bz-date), [btrz-formatter](https://www.npmjs.com/package/btrz-formatter) and [PDFMake](https://pdfmake.github.io/docs/0.1/) and link them togethers while adding some helpers to easily generate PDFs from templates.
 
 ## Install
 
@@ -170,13 +173,13 @@ Parameters
 It will use the value of ticket.code to generate the barcode with all the defaults
 
 ```liquid
-{% barcode ticket.code %} 
+{% raw %} {% barcode ticket.code %} {% endraw %}
 ```
 
 It will use the value given and use generate a 'code11' barcode with a height of 50 and a width of 300
 
 ```liquid
-{% barcode 1234 code11 50 300 %} 
+{% raw %} {% barcode 1234 code11 50 300 %} {% endraw %} 
 ```
 
 ### Supported types
@@ -189,11 +192,11 @@ While symbology supports QRCODE PDFMake also had support for QR natively and we 
 Returns a date formatted by the given format from a property of an object given to the liquid template data.
 
 ```liquid
-{%- dateTime ticket createdAt %} //"12/21/2021 11:38 AM"
+{% raw %} {%- dateTime ticket createdAt -%} {% endraw %} //"12/21/2021 11:38 AM"
 ```
 
 ```liquid
-{%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss %} //"12/21/2021 11:38:00"
+{% raw %} {%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss -%} {% endraw %} //"12/21/2021 11:38:00"
 ```
 
 Parameters
@@ -237,7 +240,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- dateF ticket createdAt %} //"12/21/2021"
+{% raw %} {%- dateF ticket createdAt -%} {% endraw %} //"12/21/2021"
 ```
 
 * ## timeF
@@ -252,7 +255,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- timeF ticket createdAt %} //"11:38 AM"
+{% raw %} {%- timeF ticket createdAt -%} {% endraw %} //"11:38 AM"
 ```
 
 * ## humanDate
@@ -271,7 +274,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- humanDate ticket createdAt %} //"Tue Dec 21, 2021"
+{% raw %} {%- humanDate ticket createdAt -%} {% endraw %} //"Tue Dec 21, 2021"
 ```
 
 * ## humanDateTime
@@ -290,7 +293,7 @@ Parameters
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
 
 ```liquid
-{%- humanDateTime ticket createdAt %} //"Tue Dec 21, 2021 11:38 AM"
+{% raw %} {%- humanDateTime ticket createdAt -%} {% endraw %} //"Tue Dec 21, 2021 11:38 AM"
 ```
 
 * ## h
@@ -304,7 +307,7 @@ Parameters
 | property | this will be "evaluated" from the data provided to the liquid template | Y |
 
 ```javascript
-{% h ticket.lexiconKeys.terms %} //If will get the string in the property and parse it
+{% raw %} {% h ticket.lexiconKeys.terms %} {% endraw %} //If will get the string in the property and parse it
 ```
 
 ### Supported html tags
@@ -328,7 +331,7 @@ Parameters
 | rgb | the colour of the line | N | 0,0,0
 
 ```liquid
-{%- hline 475 2 255,112,0 -%} //Generates an svg line with the width, weight and colour given
+{% raw %} {%- hline 475 2 255,112,0 - %} {% endraw %} //Generates an svg line with the width, weight and colour given
 ```
 
 ```json
@@ -353,11 +356,11 @@ Parameters
 | property | the key for the lexicon | Y |
 
 ```liquid
-{% t 'issued' %} //Will return the value on the lexicon with the 'issued' key
+{% raw %} {% t 'issued' %} {% endraw %} //Will return the value on the lexicon with the 'issued' key
 ```
 
 ```liquid
-{% t fare.lexiconKeys.description %} //Will return the value on the lexicon with the key stored in the `data.fare.lexiconKeys.description` property
+{% raw %} {% t fare.lexiconKeys.description %} {% endraw %} //Will return the value on the lexicon with the key stored in the `data.fare.lexiconKeys.description` property
 ```
 
 * ## money
@@ -372,7 +375,7 @@ Parameters
 | propName | The name of the property of the item | N | total
 
 ```liquid
-"{%- money ticket total -%}" //Given that ticket.total is 2800000 returns "28.00"
+"{% raw %} {%- money ticket total -%} {% endraw %}" //Given that ticket.total is 2800000 returns "28.00"
 ```
 
 * ## moneyReduce
@@ -388,7 +391,7 @@ Parameters
 | innerPropName | The name of the property in the objects in the collection | N | calculated
 
 ```liquid
-"{%- money ticket fees subTotal -%}"
+"{% raw %} {%- money ticket fees subTotal -%} {% endraw %}"
 ```
 
 * ## curcySymbol
@@ -402,7 +405,7 @@ Parameters
 | item | An object in the data given to the liquid template | N | ticket
 
 ```liquid
-{%- curcySymbol ticket -%}",
+{% raw %} {%- curcySymbol ticket -%} {% endraw %}",
 ```
 
 * ## curcyIso
@@ -416,5 +419,5 @@ Parameters
 | item | An object in the data given to the liquid template | N | ticket
 
 ```liquid
-{%- curcyIso ticket -%}
+{% raw %} {%- curcyIso ticket -%} {% endraw %}
 ```
