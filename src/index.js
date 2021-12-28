@@ -6,8 +6,41 @@ const {Html} = require("./html.js");
 const {Money, CurcySymbol, CurcyIso, MoneyReduce} = require("./money.js");
 const {DateF, TimeF, DateTime, HumanDate, HumanDateTime} = require("./dateFormat.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
+const pdfjs = require("pdfjs");
 
 module.exports = {
+  async mergePDFBuffers(buffers) {
+    const merged = new pdfjs.Document({
+      // won't be used, pdfjs just requires a font
+      font: require("pdfjs/font/Helvetica")
+    });
+
+    for (const buffer of buffers) {
+      const ext = new pdfjs.ExternalDocument(buffer);
+      merged.addPagesOf(ext);
+    }
+
+    return merged.asBuffer();
+  },
+  async returnPdfBuffer(liquidTemplate, data ) {
+    try {
+      const documentDefinition = await this.toDocumentDefinition(liquidTemplate, data);
+      const doc = createPdfKitDocument(documentDefinition);
+      const p = new Promise((resolve, reject) => {
+        const buffers = [];
+        doc.on("data", buffers.push.bind(buffers));
+        doc.on("error", reject);
+        doc.on("end", () => {
+          const pdfData = Buffer.concat(buffers);
+          resolve(pdfData);
+        });
+      });
+      doc.end();
+      return p;
+    } catch (err) {
+      throw err;
+    }
+  },
   async returnPdfBinary(liquidTemplate, data, cb) {
     try {
       const documentDefinition = await this.toDocumentDefinition(liquidTemplate, data);
@@ -40,7 +73,7 @@ module.exports = {
     engine.plugin(HumanDate);
     engine.plugin(HumanDateTime);
     const str = await engine.parseAndRender(liquidTemplate, data);
-    console.log(str);
+    // console.log(str);
     return JSON.parse(str);
   },
   defaultDocumentDefinition

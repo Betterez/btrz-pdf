@@ -16,9 +16,10 @@ The documents generated only use Helvetica fonts.
 
 ## Methods
 
-* returnPdfBinary(liquidTemplate, data, cb)
+* returnPdfBuffer(liquidTemplate, data)
 
-Async method using a cb to return a buffer, best used with Express to return the PDF in the response.
+Async method that returns a buffer can be used to return PDF with Express or to generate documents that will be merged togheter.
+
 
 Parameters
 
@@ -26,7 +27,18 @@ Parameters
 |------|------|
 | liquidTemplate | object representing a pdfmake document with valid liquidSyntax |
 | data | Object with data needed by the liquid template |
-| cb | A callback with the signature (err, buffer)
+
+* returnPdfBinary(liquidTemplate, data, cb)
+
+Async method using a cb to return a binary, best used with Express to return the PDF in the response as a plugin.
+
+Parameters
+
+| name | definition |
+|------|------|
+| liquidTemplate | object representing a pdfmake document with valid liquidSyntax |
+| data | Object with data needed by the liquid template |
+| cb | A callback with the signature (err, binary)
 
 * returnPdfDocument(liquidTemplate, data)
 
@@ -115,6 +127,45 @@ Response
 ```
 
 ## Usage
+
+```javascript
+  const btrzPdf = require("btrz-pdf");
+
+  //Returns a PDF as data with Express
+  async returnPdf(req, res) {
+    try {
+      const buffer = await PDF.returnPdfBuffer(template, data);
+      const filename = "document.pdf"; //you can generate this name to something relevant
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+      res.write(buffer);
+      res.send();
+      return; 
+    } catch (err) {
+      res.status(500).send(error);
+    }
+  }
+
+  async combinePdfs(req, res) {
+    try {
+      const items = [item1, item2, item3];
+      const pdfPromises = items.map((item) => {
+        data.item;
+        return PDF.returnPdfBuffer(template, data);
+      });
+      const buffers = await Promise.all(pdfPromises);
+      const combined = await PDF.mergePDFBuffers(buffers);
+      const filename = "document.pdf"; //you can generate this name to something relevant
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+      res.write(combined);
+      res.send();
+      return; 
+    } catch (err) {
+      res.status(500).send(error);
+    }
+  }
+```
 
 ```javascript
   const btrzPdf = require("btrz-pdf");

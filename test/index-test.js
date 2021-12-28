@@ -109,6 +109,26 @@ describe("index.js", () => {
     expect(pdf).to.be.an.instanceOf(Object);
   });
 
+  it("should return the document as a buffer", async () => {
+    const pdf = require("../src/index");
+    const template = pdf.defaultDocumentDefinition();
+    const doc = await pdf.returnPdfBuffer(JSON.stringify(template), data);
+    expect(doc).to.be.an.instanceOf(Buffer);
+  });
+
+  it("should merge buffer documents of different page sizes", async () => {
+    const pdf = require("../src/index");
+    const template1 = JSON.stringify({"content": [{"text": "Hello"}]});
+    const template2 = JSON.stringify({"pageSize": {
+      "width": 72*3.5,
+      "height": 'auto'
+    }, "content": [{"text": "Hello"}]});
+    const doc1 = await pdf.returnPdfBuffer(template1, data);
+    const doc2 = await pdf.returnPdfBuffer(template2, data);
+    const result = await pdf.mergePDFBuffers([doc1, doc2]);
+    expect(result).to.be.an.instanceOf(Buffer);
+  });
+
   it("should return a parsed liquidTemplate", async () => {
     const pdf = require("../src/index");
     const template = `{
