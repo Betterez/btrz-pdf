@@ -129,6 +129,29 @@ describe("index.js", () => {
     expect(result).to.be.an.instanceOf(Buffer);
   });
 
+  it("should return money even when values is zero", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        "{%- money ticket total -%}",
+        "{%- curcySymbol ticket -%}",
+        "{%- curcyIso ticket -%}",
+        "{%- moneyReduce ticket ssrs subTotal -%}"
+      ]
+    }`;
+    data.ticket.total = 0;
+    data.ticket.ssrs[0].subTotal = 0;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "0.00",
+        "$",
+        "CAD",
+        "31.00",
+      ]
+    });
+  });
+
   it("should return a parsed liquidTemplate", async () => {
     const pdf = require("../src/index");
     const template = `{

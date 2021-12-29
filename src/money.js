@@ -128,7 +128,7 @@ function Money(engine) {
     },
     render: async function(ctx) {
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
+        ctx.environments[this.item] && ctx.environments[this.item][this.propName] !== undefined) {
         return formatter.money(getCurrencyValue(ctx.environments[this.item], this.propName, ctx.environments.providerPreferences, {prefix: "display"}));
       }
       return "PNA";
