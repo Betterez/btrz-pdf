@@ -86,7 +86,7 @@ and some more here`,
   });
 
 
-  it.only("should return a default document definition", () => {
+  it("should return a default document definition", () => {
     const pdf = require("../src/index.js");
     const docDef = pdf.defaultDocumentDefinition();
     expect(docDef).to.be.an("object");
