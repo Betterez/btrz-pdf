@@ -16,6 +16,9 @@ describe("index.js", () => {
           },
           dateFormat: "mm/dd/yyyy",
           multiCurrency: true,
+          multiline: `something here
+and some more here
+and some more here`,
           supportedCurrencies: [
             {
               isocode: "USD",
@@ -83,12 +86,16 @@ describe("index.js", () => {
   });
 
 
-  it("should return a default document definition", () => {
+  it.only("should return a default document definition", () => {
     const pdf = require("../src/index.js");
     const docDef = pdf.defaultDocumentDefinition();
     expect(docDef).to.be.an("object");
     expect(docDef.content).to.be.an("array");
     expect(docDef.content).to.be.eql([]);
+    expect(docDef.pageSize.width).to.be.eql(252);
+    expect(docDef.pageSize.height).to.be.eql("auto");
+    expect(docDef.pageMargins).to.be.eql([10,10,10,10]);
+    expect(docDef.pageOrientation).to.be.eql("portrait");
     expect(docDef.defaultStyle).to.be.an("object");
     expect(docDef.defaultStyle).to.be.eql({"font": "Helvetica", "fontSize": 10, "lineHeight": 1.3});
     expect(docDef.styles).to.be.an("object");
@@ -179,7 +186,9 @@ describe("index.js", () => {
         "{%- dateTime ticket createdAt %}",
         "{%- dateTime ticket createdAt mm/dd/yyyy hh:MM:ss %}",
         "{%- dateF ticket createdAt %}",
-        "{%- timeF ticket createdAt %}"
+        "{%- timeF ticket createdAt %}",
+        {% txt providerPreferences.preferences.multiline %},
+        {% txt providerPreferences.preferences.multiline small %}
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -216,7 +225,13 @@ describe("index.js", () => {
         "12/21/2021 11:38 AM",
         "12/21/2021 11:38:00",
         "12/21/2021",
-        "11:38 AM"
+        "11:38 AM",
+        {"text": "something here"},
+        {"text": "and some more here"},
+        {"text": "and some more here"},
+        {"text": "something here", "style": "small"},
+        {"text": "and some more here", "style": "small"},
+        {"text": "and some more here", "style": "small"}
       ]
     });
   });

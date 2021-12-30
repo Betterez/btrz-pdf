@@ -104,7 +104,13 @@ function createPdfBinary(pdfDoc, callback) {
 function defaultDocumentDefinition() {
   return {
     defaultStyle: defaultStyle(),
+    pageMargins: [10,10,10,10],
     styles: styles(),
+    pageSize: {
+      width: 252,
+      height: "auto"
+    },
+    pageOrientation: "portrait",
     content: []
   };
 }

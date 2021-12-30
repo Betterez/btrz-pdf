@@ -15,7 +15,7 @@ npm i btrz-pdf
 
 ## Restrictions
 
-The documents generated only use Helvetica fonts.
+The documents generated only uses Helvetica fonts.
 
 ## Methods
 
@@ -66,19 +66,6 @@ Parameters
 * defaultDocumentDefinition
 
 Returns an empty PDFmake document definition with some default styles
-
-* toDocumentDefinition(liquidTemplate, data)
-
-Async method that returns a PDFmake document defintion after processing the template and the data
-
-Parameters
-
-| name | definition |
-|------|------|
-| liquidTemplate | object representing a pdfmake document with valid liquidSyntax |
-| data | Object with data needed by the liquid template |
-
-Response
 
 ```json
 {
@@ -138,6 +125,18 @@ Response
 }
 ```
 
+* toDocumentDefinition(liquidTemplate, data)
+
+Async method that returns a PDFmake document defintion after processing the template and the data
+
+Parameters
+
+| name | definition |
+|------|------|
+| liquidTemplate | object representing a pdfmake document with valid liquidSyntax |
+| data | Object with data needed by the liquid template |
+
+
 ## Usage
 
 
@@ -159,7 +158,6 @@ Response
   }
 
 ```
-
 
 ```javascript
   const btrzPdf = require("btrz-pdf");
@@ -427,6 +425,21 @@ Parameters
 
 ```liquid
 {% raw %} {% t fare.lexiconKeys.description %} {% endraw %} //Will return the value on the lexicon with the key stored in the `data.fare.lexiconKeys.description` property
+```
+
+* ## txt
+
+Split lines or hardcoded text that may include carriage returns
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| liquid expression | A liquid expression that will be evaluated and each line will be converted on a text node | Y
+| style | A style defined in the document to apply to the resulted text nodes | N
+
+```liquid
+"{% raw %} {% txt operatingCompany.infoOnPrintedTicket small %} {% endraw %}" //Given that ticket.total is 2800000 returns "28.00"
 ```
 
 * ## money
