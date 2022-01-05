@@ -251,6 +251,29 @@ It will use the value given and use generate a 'code11' barcode with a height of
 It supports all types supported by [https://symbology.dev/](Symbology).
 While symbology supports QRCODE PDFMake also had support for QR natively and we recommend it.
 
+
+* ## qrstr
+
+Returns the proper str to transform into a QR code to be able to scan items with the drivers app
+
+```liquid
+{% raw %} {%- qrstr reservation -%} {% endraw %} //"https://{{ctx.environments.providerPreferences.domain}}/r/t/{{reservation.urlTicketCode}}"
+```
+
+```liquid
+{% raw %} {%- qrstr ticket -%} {% endraw %} //"https://{{ctx.environments.providerPreferences.domain}}/r/t/{{ticket.urlTicketCode}}"
+```
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| type | The type of object we will be generating the string for the qrcode | N | ticket
+
+### Valid types
+
+reservation, ticket, paid_in, parcel, flexpass, ssr, redeemableItem
+
 * ## dateTime
 
 Returns a date formatted by the given format from a property of an object given to the liquid template data.
@@ -316,10 +339,25 @@ Parameters
 | name | definition | required | default |
 |------|------------|----------|---------|
 | item | An object in the data given to the liquid template | N | ticket
-| propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
+| propName | The name of the property of the item (it should be a BzDate object or a time string) | N | createdAt
 
 ```liquid
 {% raw %} {%- timeF ticket createdAt -%} {% endraw %} //"11:38 AM"
+```
+
+* ## expDate
+
+Convenience method that will calculate the expiration date for a reservation
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+| format | A format object | N | providerPreferences defaults (see prereqs)
+
+```liquid
+{% raw %} {%- expDate reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
 ```
 
 * ## humanDate

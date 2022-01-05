@@ -11,15 +11,23 @@ function getFriendlyFormat(humanDate) {
   return (humanDate === "mm") ? "ddd mmm dd, yyyy" : "ddd dd mmm, yyyy"
 }
 
-function getDate(envs, item, propName, format) {
+function formatBzDate(bzDate, format, envs) {
+  const lang = shortLang(envs.lang);
   const timeFormat = envs.providerPreferences.preferences.timeFormat;
   const timeZone = envs.providerPreferences.preferences.timeZone;
-  const lang = shortLang(envs.lang);
-  const date = new BzDate(envs[item][propName]);
-  const offset = timezones.getOffset(timeZone, date);
-  const createdLocal = date.addMinutes(offset);
+  const offset = timezones.getOffset(timeZone, bzDate);
+  const createdLocal = bzDate.addMinutes(offset);
   return `${formatter.dateFormat(createdLocal.toString(`'yyyy-mm-dd' ${timeFormat}`), `${format}`, false, lang)}`;
 }
+
+function getDate(envs, item, propName, format) {
+  const date = new BzDate(envs[item][propName]);
+  return formatBzDate(date, format, envs);
+}
+
+function getTimeFromString(timeString, format) {
+  return formatter.timeFormat(timeString, format);
+};
 
 function HumanDateTime(engine) {
   this.registerTag("humanDateTime", {
@@ -109,7 +117,46 @@ function TimeF(engine) {
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
         ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
         const format = ctx.environments.providerPreferences.preferences.timeFormat;
+        if (ctx.environments[this.item][this.propName].toUpperCase) { 
+
+          return getTimeFromString(ctx.environments[this.item][this.propName], format);
+        }
         return getDate(ctx.environments, this.item, this.propName, format);
+      }
+      return "PNA";
+    }
+  });
+}
+
+
+function ExpDate(engine) {
+  this.registerTag("expDate", {
+    parse: function(tagToken, remainTokens) {
+      const args = tagToken.args.split(" ");
+      this.item = args[0] || "ticket";
+      if (args.length > 1) {
+        this.format = args.slice(2).join(" ") || "";
+      }
+    },
+    render: async function(ctx) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
+        ctx.environments[this.item] && ctx.environments[this.item].expirationDate) {
+        const item = ctx.environments[this.item];
+        let expireDate = new BzDate(item.expirationDate);
+        if (item.departureTime) {
+          const timeParts = item.departureTime.split(":");
+          expireDate.addHours(timeParts[0]);
+          expireDate.addMinutes(timeParts[1]);
+        }
+        if (item.expire && item.expire > 0) {
+          if (item.expireUnit === "minutes") {
+            expireDate = expireDate.addMinutes(item.expire);
+          } else {
+            expireDate = expireDate.addDays(item.expire);
+          }
+        }
+        const format = this.format || `${ctx.environments.providerPreferences.preferences.dateFormat} ${ctx.environments.providerPreferences.preferences.timeFormat}`;
+        return formatBzDate(expireDate, format, ctx.environments);
       }
       return "PNA";
     }
@@ -119,6 +166,7 @@ function TimeF(engine) {
 module.exports = {
   DateF,
   DateTime,
+  ExpDate,
   HumanDate,
   HumanDateTime,
   TimeF

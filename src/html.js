@@ -1,10 +1,10 @@
 function getBoldToken(token) {
-  const txt = token.replace(/<\/b>/ig, '<b>').replace(/<b>/ig, '');
+  const txt = token.replace(/<\/b>/ig, '<b>').replace(/<b>/ig, '').replace(/"/ig, '``');
   return `{"bold": true, "text": "${txt}"}`;
 }
 
 function getItalicToken(token) {
-  const txt = token.replace(/<\/i>/ig, '<i>').replace(/<i>/ig, '');
+  const txt = token.replace(/<\/i>/ig, '<i>').replace(/<i>/ig, '').replace(/"/ig, '``');
   return `{"italics": true, "text": "${txt}"}`;
 }
 
@@ -15,7 +15,8 @@ function getHeaderToken(token, size) {
     .replace(/<h1>/ig, '<h>')
     .replace(/<h2>/ig, '<h>')
     .replace(/<h3>/ig, '<h>')
-    .replace(/<h>/ig, '');
+    .replace(/<h>/ig, '')
+    .replace(/"/ig, '``');
   if (size === '1') {
     return `{"style": "header", "text": "${txt}"}`;
   }
@@ -34,11 +35,11 @@ function getTokenInfo(token) {
   if (token.indexOf('<h1>') !== -1) { return getHeaderToken(token, '1'); }
   if (token.indexOf('<h2>') !== -1) { return getHeaderToken(token, '2'); }
   if (token.indexOf('<h3>') !== -1) { return getHeaderToken(token, '3'); }
-  return `{"text": "${token.trim()}"}`;
+  return `{"text": "${token.trim().replace(/"/ig, '``')}"}`;
 }
 
 function parseLine(line) {
-  if (!line) { return [getTokenInfo(line)]; }
+  if (!line) { return [getTokenInfo(line || "")]; }
   const htmls = line.match(/<.>.*?<\/.>/ig);
   const parsed = [];
   let parts = [];
@@ -46,15 +47,15 @@ function parseLine(line) {
   if (htmls) {
     htmls.forEach((token) => {
       parts = line.split(token);
-      parsed.push(getTokenInfo(parts[0]));
-      parsed.push(getTokenInfo(token));
+      parsed.push(getTokenInfo(parts[0] || ""));
+      parsed.push(getTokenInfo(token || ""));
       if (parts.length > 1) {
         line = parts[1];
       }
     });
   }
   if (line) {
-    parsed.push(getTokenInfo(line));
+    parsed.push(getTokenInfo(line || ""));
   }
   return parsed;
 }

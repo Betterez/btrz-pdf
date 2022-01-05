@@ -1,8 +1,10 @@
 function getLines(str, style) {
+  if (!str || !str.replace) { return ""; }
   const lines = str.replace(/\r\n/g, '<br/>')
     .replace(/\n/g, '<br/>')
     .replace(/\r/g, '<br/>')
     .replace(/<br>/ig, '<br/>')
+    .replace(/"/ig, '``')
     .split('<br/>');
   return lines.map((line) => {
     if (style) {

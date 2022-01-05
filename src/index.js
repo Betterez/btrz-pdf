@@ -4,8 +4,9 @@ const {HorizontalLine} = require("./lines.js");
 const {Barcode} = require("./barcode.js");
 const {Html} = require("./html.js");
 const {Money, CurcySymbol, CurcyIso, MoneyReduce} = require("./money.js");
-const {DateF, TimeF, DateTime, HumanDate, HumanDateTime} = require("./dateFormat.js");
+const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate} = require("./dateFormat.js");
 const {Text} = require("./text.js");
+const {QrString} = require("./qrstr.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 const pdfjs = require("pdfjs");
 
@@ -74,6 +75,8 @@ module.exports = {
     engine.plugin(HumanDate);
     engine.plugin(HumanDateTime);
     engine.plugin(Text);
+    engine.plugin(ExpDate);
+    engine.plugin(QrString);
     const str = await engine.parseAndRender(liquidTemplate, data);
     // console.log(str);
     return JSON.parse(str);
