@@ -19,10 +19,11 @@ function getCurrencyValue(item, propName, providerPreferences, userOptions) {
 }
 
 function getCurrency(item, providerPreferences) {
+  const baseCurrency = providerPreferences.preferences.supportedCurrencies[0];
   if (providerPreferences.preferences.multiCurrency) {
     return item && item.displayCurrency && item.displayCurrency.isocode ? item.displayCurrency : baseCurrency;
   }
-  return providerPreferences.preferences.supportedCurrencies[0];
+  return baseCurrency;
 }
 
 function getCurrencySymbol(isocode) {
@@ -99,20 +100,17 @@ function MoneyReduce(engine) {
   this.registerTag("moneyReduce", {
     parse: function(tagToken, remainTokens) {
       const args = tagToken.args.split(" ");
-      this.item = args[0] || "ticket";
-      this.propName = args[1] || "taxes";
-      this.innerPropName = args[2] || "calculated";
+      this.item = args[0] || "ticket.taxes";
+      this.innerPropName = args[1] || "calculated";
     },
     render: async function(ctx) {
+      const coll = await this.liquid.evalValue(this.item, ctx);
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
-        const coll = ctx.environments[this.item][this.propName];
-        if (Array.isArray(coll)) {
-          const sum = coll.reduce((acc, item) => {
-            return acc + getCurrencyValue(item, this.innerPropName, ctx.environments.providerPreferences, {prefix: "display"});
-          }, 0);
-          return formatter.money(sum);
-        }
+        Array.isArray(coll)) {
+        const sum = coll.reduce((acc, item) => {
+          return acc + getCurrencyValue(item, this.innerPropName, ctx.environments.providerPreferences, {prefix: "display"});
+        }, 0);
+        return formatter.money(sum);
       }
       return "PNA";
     }
@@ -123,13 +121,14 @@ function Money(engine) {
   this.registerTag("money", {
     parse: function(tagToken, remainTokens) {
       const args = tagToken.args.split(" ");
-      this.item = args[0] || "ticket";
+      this.item = args[0] || "ticket.total";
       this.propName = args[1] || "total";
     },
     render: async function(ctx) {
+      const item = await this.liquid.evalValue(this.item, ctx);
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName] !== undefined) {
-        return formatter.money(getCurrencyValue(ctx.environments[this.item], this.propName, ctx.environments.providerPreferences, {prefix: "display"}));
+        item && item[this.propName] !== undefined) {
+        return formatter.money(getCurrencyValue(item, this.propName, ctx.environments.providerPreferences, {prefix: "display"}));
       }
       return "PNA";
     }
@@ -142,8 +141,9 @@ function CurcySymbol(engine) {
       this.item = tagToken.args || "ticket";
     },
     render: async function(ctx) {
-      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && ctx.environments[this.item]) {
-        const itemCurrency = getCurrency(ctx.environments[this.item], ctx.environments.providerPreferences);
+      const item = await this.liquid.evalValue(this.item, ctx);
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && item) {
+        const itemCurrency = getCurrency(item, ctx.environments.providerPreferences);
         return getCurrencySymbol((itemCurrency || {}).isocode || " ");
       }
       return "";
@@ -157,8 +157,9 @@ function CurcyIso(engine) {
       this.item = tagToken.args || "ticket";
     },
     render: async function(ctx) {
-      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && ctx.environments[this.item]) {
-        const itemCurrency = getCurrency(ctx.environments[this.item], ctx.environments.providerPreferences);
+      const item = await this.liquid.evalValue(this.item, ctx);
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && item) {
+        const itemCurrency = getCurrency(item, ctx.environments.providerPreferences);
         return (itemCurrency || {}).isocode || " ";
       }
       return "";

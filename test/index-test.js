@@ -5,6 +5,52 @@ describe("index.js", () => {
     data = {
       transaction: {
         _id: "5c9f8f8f8f8f8f8f8f8f8f8",
+        payments: [
+          {
+            provider: "inperson",
+            type: "cash",
+            displayName: "Cash",
+            status: "success",
+            amount: 3.86,
+            rollbackPayload: null,
+            acceptedCurrency: {
+              isocode:"GTQ",
+              symbol:"Q",
+              buy:7.77,
+              sell:7.57,
+              channels:[]
+            },
+            displayAmount: "30.00",
+            displayCurrency: {
+              isocode:"GTQ",
+              symbol:"Q",
+              buy:7.77,
+              sell:7.57
+            },
+            acceptedCurrencyAmount: 30,
+            exchangeDetails: {
+              exchangeCurrency:{},
+              acceptedCurrencyAmount: 3000000,
+              acceptedCurrencyAmountReceived: 3000000,
+              acceptedCurrencyAmountReturned: 0,
+              exchangeCurrencyAmount: 386100,
+              exchangeCurrencyAmountReceived: 386100,
+              exchangeCurrencyAmountReturned: 0
+            }
+          },
+          {
+            amount: 20,
+            displayCurrency: {
+              isocode:"USD",
+              symbol:"$",
+              buy:7.77,
+              sell:7.57
+            },
+          },
+          {
+            amount: 30
+          }
+        ]
       },
       providerPreferences: {
         preferences: {
@@ -85,7 +131,6 @@ and some more here`,
     }
   });
 
-
   it("should return a default document definition", () => {
     const pdf = require("../src/index.js");
     const docDef = pdf.defaultDocumentDefinition();
@@ -140,10 +185,14 @@ and some more here`,
     const pdf = require("../src/index");
     const template = `{
       "content": [
+        {%for payment in transaction.payments %}
+        "{%- curcySymbol payment -%}",
+        "{%- curcyIso payment -%}",
+        {% endfor %}
         "{%- money ticket total -%}",
         "{%- curcySymbol ticket -%}",
         "{%- curcyIso ticket -%}",
-        "{%- moneyReduce ticket ssrs subTotal -%}"
+        "{%- moneyReduce ticket.ssrs subTotal -%}"
       ]
     }`;
     data.ticket.total = 0;
@@ -151,6 +200,12 @@ and some more here`,
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
     expect(documentDefinition).to.be.eql({
       "content": [
+        "Q",
+        "GTQ",
+        "$",
+        "USD",
+        "$",
+        "USD",
         "0.00",
         "$",
         "CAD",
@@ -180,7 +235,7 @@ and some more here`,
         "{%- money ticket total -%}",
         "{%- curcySymbol ticket -%}",
         "{%- curcyIso ticket -%}",
-        "{%- moneyReduce ticket ssrs subTotal -%}",
+        "{%- moneyReduce ticket.ssrs subTotal -%}",
         "{%- humanDateTime ticket createdAt %}",
         "{%- humanDate ticket createdAt %}",
         "{%- dateTime ticket createdAt %}",

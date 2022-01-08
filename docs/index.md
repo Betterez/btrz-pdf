@@ -503,12 +503,11 @@ Parameters
 
 | name | definition | required | default |
 |------|------------|----------|---------|
-| item | An object in the data given to the liquid template | N | ticket
-| propName | The name of the property of the item that is a collection of objects | N | taxes
+| item.propName | An object in the data given to the liquid template | N | ticket.taxes
 | innerPropName | The name of the property in the objects in the collection | N | calculated
 
 ```liquid
-"{% raw %} {%- money ticket fees subTotal -%} {% endraw %}"
+"{% raw %} {%- money ticket.fees subTotal -%} {% endraw %}"
 ```
 
 * ## curcySymbol
