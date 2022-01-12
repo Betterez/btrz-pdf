@@ -7,6 +7,7 @@ const {Money, CurcySymbol, CurcyIso, MoneyReduce} = require("./money.js");
 const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate} = require("./dateFormat.js");
 const {Text} = require("./text.js");
 const {QrString} = require("./qrstr.js");
+const {ToLetters} = require("./toletters.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 const pdfjs = require("pdfjs");
 
@@ -77,6 +78,7 @@ module.exports = {
     engine.plugin(Text);
     engine.plugin(ExpDate);
     engine.plugin(QrString);
+    engine.plugin(ToLetters);
     const str = await engine.parseAndRender(liquidTemplate, data);
     // console.log(str);
     return JSON.parse(str);
