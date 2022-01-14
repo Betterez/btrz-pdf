@@ -167,9 +167,26 @@ function CurcyIso(engine) {
   });
 }
 
+function CurcyName(engine) {
+  this.registerTag("curcyName", {
+    parse: function(tagToken, remainTokens) {
+      this.item = tagToken.args || "ticket";
+    },
+    render: async function(ctx) {
+      const item = await this.liquid.evalValue(this.item, ctx);
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && item) {
+        const itemCurrency = getCurrency(item, ctx.environments.providerPreferences);
+        return ctx.environments.localizer.get((itemCurrency || {}).isocode || " ");
+      }
+      return "";
+    }
+  });
+}
+
 module.exports = {
   CurcyIso,
   CurcySymbol,
+  CurcyName,
   Money,
   MoneyReduce
 };

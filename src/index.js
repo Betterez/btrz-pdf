@@ -3,7 +3,7 @@ const {Localizer} = require("./localizer.js");
 const {HorizontalLine} = require("./lines.js");
 const {Barcode} = require("./barcode.js");
 const {Html} = require("./html.js");
-const {Money, CurcySymbol, CurcyIso, MoneyReduce} = require("./money.js");
+const {Money, CurcySymbol, CurcyIso, CurcyName, MoneyReduce} = require("./money.js");
 const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate} = require("./dateFormat.js");
 const {Text} = require("./text.js");
 const {QrString} = require("./qrstr.js");
@@ -69,6 +69,7 @@ module.exports = {
     engine.plugin(Money);
     engine.plugin(CurcySymbol);
     engine.plugin(CurcyIso);
+    engine.plugin(CurcyName);
     engine.plugin(MoneyReduce);
     engine.plugin(DateF);
     engine.plugin(TimeF);

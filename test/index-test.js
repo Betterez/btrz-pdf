@@ -224,15 +224,17 @@ and some more here`,
       "content": [
         "{% toLetters ticket.displayTotalStr %}",
         "{% toLetters ticket.displayTotalStr2 %}",
-        "{% toLetters ticket.displayTotalStr3 %}"
+        "{% toLetters ticket.displayTotalStr3 %}",
+        "{% curcyName ticket %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
     expect(documentDefinition).to.be.eql({
       "content": [
-        "veintiocho =>with treinta y seis =>cents",
-        "doscientos ochenta y nueve",
-        "doscientos ochenta y nueve"
+        "Veintiocho =>with treinta y seis =>cents",
+        "Doscientos ochenta y nueve",
+        "Doscientos ochenta y nueve",
+        "=>CAD"
       ]
     })
   });
