@@ -430,10 +430,14 @@ Parameters
 |------|------------|----------|---------|
 | width | the width of the line | N | 500
 | weight | the weight of the line | N | 1
-| rgb | the colour of the line | N | 0,0,0
+| rgb | the colour of the line, either a rgb or hex value or read from a data property as hex | N | 0,0,0
 
 ```liquid
 {% raw %} {%- hline 475 2 255,112,0 - %} {% endraw %} //Generates an svg line with the width, weight and colour given
+```
+
+```liquid
+{% raw %} {%- hline 475 2 providerPreferences.preferences.colors.brandBackground - %} {% endraw %} //Generates an svg line with the width, weight and colour given
 ```
 
 ```json

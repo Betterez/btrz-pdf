@@ -54,6 +54,9 @@ describe("index.js", () => {
       },
       providerPreferences: {
         preferences: {
+          colors: {
+            brandBackground: "#ee732f"
+          },
           timeFormat: "h:MM TT",
           timeZone: {
             name: "(UTC-5:00) New York (United States), Toronto (Canada)",
@@ -237,6 +240,39 @@ and some more here`,
         "=>CAD"
       ]
     })
+  });
+
+  it("should return alines with the correct colour", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- hline 356 2 60,60,60 -%},
+        {%- hline 356 2 #404040 -%},
+        {%- hline  -%},
+        {%- hline 100 2 providerPreferences.preferences.colors.brandBackground -%}
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(60,60,60);stroke-width:2' /></svg>",
+          "width": 356
+        },
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(64,64,64);stroke-width:2' /></svg>",
+          "width": 356
+        },
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(0,0,0);stroke-width:1' /></svg>",
+          "width": 500
+        },
+        {
+          "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(238,115,47);stroke-width:2' /></svg>",
+          "width": 100
+        }
+      ]
+    });
   });
 
   it("should return a parsed liquidTemplate", async () => {
