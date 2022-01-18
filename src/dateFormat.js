@@ -21,7 +21,14 @@ function formatBzDate(bzDate, format, envs) {
 }
 
 function getDate(envs, item, propName, format) {
-  const date = new BzDate(envs[item][propName]);
+  let dateObjOrString = envs[item][propName];
+  if (dateObjOrString && dateObjOrString.toUpperCase) {
+    dateObjOrString = {
+      value: dateObjOrString,
+      offset: 0
+    };
+  }
+  const date = new BzDate(dateObjOrString);
   return formatBzDate(date, format, envs);
 }
 
@@ -117,8 +124,7 @@ function TimeF(engine) {
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
         ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
         const format = ctx.environments.providerPreferences.preferences.timeFormat;
-        if (ctx.environments[this.item][this.propName].toUpperCase) { 
-
+        if (ctx.environments[this.item][this.propName].toUpperCase && ctx.environments[this.item][this.propName].indexOf("T") === -1){ 
           return getTimeFromString(ctx.environments[this.item][this.propName], format);
         }
         return getDate(ctx.environments, this.item, this.propName, format);

@@ -103,6 +103,7 @@ and some more here`,
         displayTotalStr: "28.36",
         "displayTotalStr2": "289",
         "displayTotalStr3": "289.00",
+        arrivalTimestamp: "2022-01-19T13:00:00.000Z",
         taxes: [],
         ssrs: [
           {
@@ -271,6 +272,31 @@ and some more here`,
           "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(238,115,47);stroke-width:2' /></svg>",
           "width": 100
         }
+      ]
+    });
+  });
+
+  it("should parse dates from ISO dates", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        "{%- humanDateTime ticket arrivalTimestamp %}",
+        "{%- humanDate ticket arrivalTimestamp %}",
+        "{%- dateTime ticket arrivalTimestamp %}",
+        "{%- dateTime ticket arrivalTimestamp mm/dd/yyyy hh:MM:ss %}",
+        "{%- dateF ticket arrivalTimestamp %}",
+        "{%- timeF ticket arrivalTimestamp %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "Mié Ene 19, 2022 8:00 AM",
+        "Mié Ene 19, 2022",
+        "01/19/2022 8:00 AM",
+        "01/19/2022 08:00:00",
+        "01/19/2022",
+        "8:00 AM"
       ]
     });
   });
