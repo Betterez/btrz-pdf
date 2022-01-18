@@ -132,6 +132,9 @@ and some more here`,
             <b>html</b>
             <i>Italix</i>`;
           }
+          if (key === "text") {
+            return "text here please";
+          }
           return `=>${key}`;
         }
       },
@@ -187,6 +190,23 @@ and some more here`,
     const doc2 = await pdf.returnPdfBuffer(template2, data);
     const result = await pdf.mergePDFBuffers([doc1, doc2]);
     expect(result).to.be.an.instanceOf(Buffer);
+  });
+
+  it("should apply tag after translations", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        "{% t 'text' | upcase %}"
+      ]
+    }`;
+    data.ticket.total = 0;
+    data.ticket.ssrs[0].subTotal = 0;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "TEXT HERE PLEASE"
+      ]
+    });
   });
 
   it("should return money even when values is zero", async () => {
