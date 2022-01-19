@@ -16,8 +16,10 @@ function HttpImg(engine) {
     render: async function(ctx) {
       const url = await this.liquid.evalValue(this.str, ctx);
       try {
-        const payload = await axios.get(url);
-        return `${getPrefix(url)}${Buffer.from(payload.data).toString("base64")}`;
+        const response = await axios.get(url, {
+          responseType: "arraybuffer"
+        });
+        return `${getPrefix(url)}${Buffer.from(response.data, "binary").toString("base64")}`;
       } catch (e) {
         console.log(e);
         return "";
