@@ -3,6 +3,11 @@ describe("index.js", () => {
   let data = null;
   beforeEach(() => {
     data = {
+      brand: {
+        logos: {
+          default: "https://s3.amazonaws.com/btrz-images-test2/b5416770-795b-11ec-b752-8b6ef2019164.png"
+        }
+      },
       transaction: {
         _id: "5c9f8f8f8f8f8f8f8f8f8f8",
         payments: [
@@ -192,6 +197,25 @@ and some more here`,
     expect(result).to.be.an.instanceOf(Buffer);
   });
 
+  it("should load images via https", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {
+          "image" : "{% httpImg brand.logos.default %}"
+        }
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "image": "data:image/png;base64,77+9UE5HDQoaCgAAAA1JSERSAAAA77+9AAAAHgQDAAAA77+9Fx7vv70AAAAbUExURe+/ve+/ve+/vT/vv70/X++/vV/vv73vv73fv9+/f++/vX/vv73Pnx/vv70fAO+/vQDvv71AXu+/vQAAAAF0Uk5TAEDvv73vv71mAAAACXBIWXMAAA7vv70AAA7vv70B77+9Kw4bAAAC77+9SURBVEjvv73Flj1v77+9MBDvv71pU++/vTsabe+/vWrvv70QBB7vv70P77+9GtWgaDV6yKBRQe+/vXp0Uu+/ve+/vVjvv71JdD/vv73vv707UjpKDRrvv702zIHvv71e77+977+9UO+/ve+/ve+/vSnvv71K77+977+9W11277+977+9OGvvv71TNUfvv73vv73vv70c77+977+9Pzkd77+9zpPvv73vv73Fie+/vRjvv73vv70177+977+9bHTvv73vv70z0ofvv707Iz3vv73vv71+Fx/vv73vv73vv73vv71tVV/vv73vv71877+9Lu+/vdKBdO+/ve+/ve+/ve+/vX0RZe+/vVfvv70THO+/vWlbfCPvv73vv73vv71yJu+/ve+/ve+/ve+/vTrvv70e77+977+977+9bu+/ve+/ve+/vQHvv71fEe+/vSfvv71b77+9CO+/vSFteBvvv73vv73vv73vv71x77+9CTnvv71NJu+/vSPvv71z77+9K++/ve+/ve+/vU4tKnjvv73vv71mPe+/ve+/ve+/ve+/vVDvv70ibO+/ve+/vRJSQ++/ve+/ve+/vVvvv73vv73vv73vv71Q77+977+9KO+/vci677+977+977+977+9Ke+/vWvvv70H77+977+9bQ3vv70D77+9PRLvv73vv73vv705IgXvv73vv70s77+977+9eWrvv71BSu+/ve+/vTzvv71AOn7vv70fCSvvv70eAwXvv73vv717ee+/vTzvv73auhlHCO+/ve+/vdy877+977+9SO+/ve+/ve+/vVYUf3Pvv71kKe+/vTBCbO+/vT1lZu+/vVHvv73vv73vv73vv73vv73vv70B35kq77+9S++/ve+/vU7vv702OjLvv70Y77+9fO+/vW/vv73Yp++/vWHvv70SBu+/vWjvv73vv73vv70U77+9FO+/ve+/vSvvv73vv71P77+977+9X++/vXwN77+9G++/vSbvv71uPn12ED01xLXvv70+SRfvv73vv73vv71777+977+9Mu+/vWk877+9xKRN77+9eu+/ve+/vXUiNu+/vSMfFwc4Te+/ve+/vWLvv73vv73vv73vv70ldkvvv70k77+9EwFO77+977+9U++/vRYT77+9be+/vVfvv73vv73vv70rLu+/ve+/vcOd77+9e++/ve+/ve+/vX0QXGbvv73vv704LX9D77+977+977+9OS1N77+9AE8xS++/ve+/vTDvv71pJO+/vSTvv70U77+977+9aOS0pe+/vX0KOxzVnO+/ve+/ve+/vVIqQkxW77+9FzHvv71/DnDvv70nLO+/ve+/vXxmUW/vv73vv73vv71x77+9ae+/vUIa77+977+977+9dFrvv73vv73vv73vv73vv71vMe+/vVsn77+9d29lDV1I77+9NO+/vVA6bjZtK++/vVIpCu+/ve+/ve+/vRPvv70v77+977+977+977+9Me+/vVQyclUJF++/vXJley4hd++/ve+/ve+/ve+/ve+/ve+/ve+/ve+/ve+/vd6b77+977+977+977+9L++/vVVY77+9cu+/ve+/ve+/vXvvv73vv73vv71G77+9P++/vS9EeO+/vULamO+/vQAAAABJRU5E77+9QmDvv70="
+        }
+      ]
+    });
+  });
+
   it("should apply tag after translations", async () => {
     const pdf = require("../src/index");
     const template = `{
@@ -199,8 +223,6 @@ and some more here`,
         "{% t 'text' | upcase %}"
       ]
     }`;
-    data.ticket.total = 0;
-    data.ticket.ssrs[0].subTotal = 0;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
     expect(documentDefinition).to.be.eql({
       "content": [

@@ -12,7 +12,7 @@ function shortLang(lang) {
 function ToLetters(engine) {
   this.registerTag("toLetters", {
     parse: function(tagToken, remainTokens) {
-      this.item = tagToken.args || "ticket.total";
+      this.item = tagToken.args;
     },
     render: async function(ctx) {
       try {

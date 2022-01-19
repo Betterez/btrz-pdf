@@ -511,7 +511,7 @@ Parameters
 | innerPropName | The name of the property in the objects in the collection | N | calculated
 
 ```liquid
-"{% raw %} {%- money ticket.fees subTotal -%} {% endraw %}"
+"{% raw %} {%- moneyReduce ticket.fees subTotal -%} {% endraw %}"
 ```
 
 * ## curcySymbol
@@ -540,4 +540,36 @@ Parameters
 
 ```liquid
 {% raw %} {%- curcyIso ticket -%} {% endraw %}
+```
+
+* ## toLetters
+
+Returns the amount in letters given in the property (amount should follow US notation, uses "." for cents).
+It can translate values using the `lang` and `localizer`
+
+Parameters
+| name | definition | required | default |
+|------|------------|----------|---------|
+| stringAmount | A string with the amount | Y |
+
+```liquid
+{% raw %} {%- toLetters '100.50' -%} {% endraw %} // One hundred with fifty cents
+```
+
+```liquid
+{% raw %} {%- toLetters '123' -%} {% endraw %} // One hundred and twenty three
+```
+
+* ## httpImg
+
+Given a URL for an image will encode into base64 and return in a consumable way for makePDF, only supports png and jpeg
+
+Parameters
+| name | definition | required | default |
+|------|------------|----------|---------|
+| object.property | The property should have a fully qualified URL to an image | Y |
+
+
+```liquid
+{% raw %} {%- httpImg brand.logos.default -%} {% endraw %} // data:image/png;base64,77+9UE5HDQoaCgAAAA1JSERSAAA...
 ```

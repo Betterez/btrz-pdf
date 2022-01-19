@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Betterez/btrz-pdf#readme",
   "dependencies": {
+    "axios": "^0.25.0",
     "btrz-formatter": "^1.0.1",
     "bz-date": "^1.0.0",
     "liquidjs": "^9.29.0",
