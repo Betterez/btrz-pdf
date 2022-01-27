@@ -318,6 +318,24 @@ and some more here`,
     });
   });
 
+  it("should return the error JSON in the err.data property", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [{},
+      ]
+    }`;
+    try {
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+      expect(1).to.be.eql(2);
+    } catch (err) {
+      //spaces are important in this test
+      expect(err.data).to.be.eql(`{
+      "content": [{},
+      ]
+    }`);
+    }
+  });
+
   it("should parse dates from ISO dates", async () => {
     const pdf = require("../src/index");
     const template = `{

@@ -84,7 +84,12 @@ module.exports = {
     engine.plugin(HttpImg);
     const str = await engine.parseAndRender(liquidTemplate, data);
     // console.log(str);
-    return JSON.parse(str);
+    try {
+      return JSON.parse(str);
+    } catch (err) {
+      err.data = str;
+      throw err;
+    }
   },
   defaultDocumentDefinition
 };
