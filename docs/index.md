@@ -233,6 +233,8 @@ Parameters
 | type | The barcode type | N | code128
 | height | The barcode height | N | 30
 | width | The barcode width | N | 200
+| margin | A list of 4 values for the margin | N | 0,0,0,0
+
 
 It will use the value of ticket.code to generate the barcode with all the defaults
 
@@ -243,7 +245,7 @@ It will use the value of ticket.code to generate the barcode with all the defaul
 It will use the value given and use generate a 'code11' barcode with a height of 50 and a width of 300
 
 ```liquid
-{% raw %} {% barcode 1234 code11 50 300 %} {% endraw %} 
+{% raw %} {% barcode 1234 code11 50 300 20,20,20,0 %} {% endraw %} 
 ```
 
 ### Supported types
