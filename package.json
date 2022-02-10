@@ -27,6 +27,7 @@
     "liquidjs": "^9.29.0",
     "pdfjs": "^2.4.7",
     "pdfmake": "^0.2.4",
+    "svg-to-pdfkit": "^0.1.8",
     "symbology": "^3.0.8",
     "written-number": "^0.11.1"
   },
