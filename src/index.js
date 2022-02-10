@@ -83,7 +83,7 @@ module.exports = {
     engine.plugin(ToLetters);
     engine.plugin(HttpImg);
     const str = await engine.parseAndRender(liquidTemplate, data);
-    console.log(str);
+    // console.log(str);
     try {
       return JSON.parse(str);
     } catch (err) {
