@@ -1,4 +1,4 @@
-const PdfPrinter = require("pdfmake");
+const PdfPrinter = require("../pdfmake@0.2.4/src/printer");
 const fonts = {
   Helvetica: {
     normal: "Helvetica",

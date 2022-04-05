@@ -26,10 +26,13 @@
     "bz-date": "^1.0.0",
     "liquidjs": "^9.29.0",
     "pdfjs": "^2.4.7",
-    "pdfmake": "^0.2.4",
     "svg-to-pdfkit": "^0.1.8",
     "symbology": "^3.0.8",
-    "written-number": "^0.11.1"
+    "written-number": "^0.11.1",
+    "@foliojs-fork/linebreak": "^1.1.1",
+    "@foliojs-fork/pdfkit": "^0.13.0",
+    "iconv-lite": "^0.6.3",
+    "xmldoc": "^1.1.2"
   },
   "devDependencies": {
     "browserify": "^17.0.0",

@@ -456,4 +456,19 @@ and some more here`,
       ]
     });
   });
+
+  it("should return a pdf document", (done) => {
+    const pdf = require("../src/index.js");
+    const template = `{
+      "content": [
+        {%- barcode -%},
+        {%- barcode 1234 code128 10 2 10,5,2,4 -%},
+        {%- barcode 1234 code128 10 2 10,5 -%}
+      ]
+    }`;
+    pdf.returnPdfBinary(template, data, (err, doc) => {
+      expect(doc).to.not.equal(undefined);
+      done();
+    });
+  });
 });

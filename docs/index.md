@@ -5,7 +5,10 @@ layout: default
 
 Create pdf documents from liquid templates.
 
-This library uses [LiquidJS](https://liquidjs.com/), [Symbology](https://symbology.dev/), [Bz-Date](https://www.npmjs.com/package/bz-date), [btrz-formatter](https://www.npmjs.com/package/btrz-formatter) and [PDFMake](https://pdfmake.github.io/docs/0.1/) and link them togethers while adding some helpers to easily generate PDFs from templates.
+This library uses [LiquidJS](https://liquidjs.com/), [Symbology](https://symbology.dev/), [Bz-Date](https://www.npmjs.com/package/bz-date), [btrz-formatter](https://www.npmjs.com/package/btrz-formatter) and [PDFMake](https://pdfmake.github.io/docs/0.1/) and link them together while adding some helpers to easily generate PDFs from templates.
+
+The vesion of PDFMake has been inlined and modified to allow for text rotation.
+
 
 ## Install
 
@@ -219,6 +222,11 @@ Parameters
   }
 ```
 
+## Custom document defintions
+
+* ## direction
+
+You can add `"direction": "vertical"` to rotate the text and barcodes in the template 90 degrees.
 ## Custom tags
 
 * ## barcode
