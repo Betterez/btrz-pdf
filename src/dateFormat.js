@@ -20,6 +20,15 @@ function formatBzDate(bzDate, format, envs) {
   return `${formatter.dateFormat(createdLocal.toString(`'yyyy-mm-dd' ${timeFormat}`), `${format}`, false, lang)}`;
 }
 
+function formatBzDate2(bzDate, format, envs) {
+  const lang = shortLang(envs.lang);
+  const timeFormat = envs.providerPreferences.preferences.timeFormat;
+  // const timeZone = envs.providerPreferences.preferences.timeZone;
+  // const offset = timezones.getOffset(timeZone, bzDate);
+  // const createdLocal = bzDate.addMinutes(offset);
+  return `${formatter.dateFormat(bzDate.toString(`'yyyy-mm-dd' ${timeFormat}`), `${format}`, false, lang)}`;
+}
+
 function getDate(envs, item, propName, format) {
   let dateObjOrString = envs[item][propName];
   if (dateObjOrString && dateObjOrString.toUpperCase) {
@@ -162,7 +171,7 @@ function ExpDate(engine) {
           }
         }
         const format = this.format || `${ctx.environments.providerPreferences.preferences.dateFormat} ${ctx.environments.providerPreferences.preferences.timeFormat}`;
-        return formatBzDate(expireDate, format, ctx.environments);
+        return formatBzDate2(expireDate, format, ctx.environments);
       }
       return "PNA";
     }

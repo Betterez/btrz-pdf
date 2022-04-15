@@ -394,7 +394,6 @@ function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback,
 			var item = page.items[ii];
 			switch (item.type) {
 				case 'vector':
-          console.log("VECTOR");
 					renderVector(item.item, patterns, pdfKitDoc);
 					break;
 				case 'line':
@@ -404,7 +403,6 @@ function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback,
           renderLine(item.item, item.item.x, item.item.y, patterns, pdfKitDoc);
 					break;
 				case 'image':
-          console.log("IMAGE");
           if (docDefinition && docDefinition.direction === "vertical") {
             item.item.y = calculateVerticalY(docDefinition, item);
           }
