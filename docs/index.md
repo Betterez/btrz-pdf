@@ -226,7 +226,12 @@ Parameters
 
 * ## direction
 
-You can add `"direction": "vertical"` to rotate the text and barcodes in the template 90 degrees.
+Default is text not rotated.
+
+You can add `"direction": "rotate-right"` to rotate the text and barcodes in the template 90 degrees.
+You can add `"direction": "inverse"` to rotate the text and barcodes in the template 180 degrees.
+You can add `"direction": "rotate-left"` to rotate the text and barcodes in the template 270 degrees.
+
 ## Custom tags
 
 * ## barcode

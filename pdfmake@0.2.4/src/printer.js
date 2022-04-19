@@ -361,17 +361,34 @@ function updatePageOrientationInOptions(currentPage, pdfKitDoc) {
 	}
 }
 
-function calculateVerticalY(docDefinition, item) {
+function calculateRightY(docDefinition, item) {
   return (docDefinition.pageSize.width - item.item.y - docDefinition.pageMargins[1]) * -1;
+}
+
+function calculateLeftX(docDefinition, item) {
+  return (docDefinition.pageSize.height - item.item.x - docDefinition.pageMargins[0]) * -1;
+}
+
+function calculateInverseY(docDefinition, item) {
+  return (docDefinition.pageSize.height - item.item.y - docDefinition.pageMargins[1]) * -1;
+}
+
+function calculateInverseX(docDefinition, item) {
+  return (docDefinition.pageSize.width - item.item.x - docDefinition.pageMargins[0]) * -1;
 }
 
 function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback, docDefinition) {
 	pdfKitDoc._pdfMakePages = pages;
 	pdfKitDoc.addPage();
-  if (docDefinition && docDefinition.direction === "vertical") {
+  if (docDefinition && docDefinition.direction === "rotate-right") {
     pdfKitDoc.rotate(90);
   }
-
+  if (docDefinition && docDefinition.direction === "inverse") {
+    pdfKitDoc.rotate(180);
+  }
+  if (docDefinition && docDefinition.direction === "rotate-left") {
+    pdfKitDoc.rotate(270);
+  }
 	var totalItems = 0;
 	if (progressCallback) {
 		pages.forEach(function (page) {
@@ -397,20 +414,41 @@ function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback,
 					renderVector(item.item, patterns, pdfKitDoc);
 					break;
 				case 'line':
-          if (docDefinition && docDefinition.direction === "vertical") {
-            item.item.y = calculateVerticalY(docDefinition, item);
+          if (docDefinition && docDefinition.direction === "rotate-right") {
+            item.item.y = calculateRightY(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "rotate-left") {
+            item.item.x = calculateLeftX(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "inverse") {
+            item.item.y = calculateInverseY(docDefinition, item);
+            item.item.x = calculateInverseX(docDefinition, item);
           }
           renderLine(item.item, item.item.x, item.item.y, patterns, pdfKitDoc);
 					break;
 				case 'image':
-          if (docDefinition && docDefinition.direction === "vertical") {
-            item.item.y = calculateVerticalY(docDefinition, item);
+          if (docDefinition && docDefinition.direction === "rotate-right") {
+            item.item.y = calculateRightY(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "rotate-left") {
+            item.item.x = calculateLeftX(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "inverse") {
+            item.item.y = calculateInverseY(docDefinition, item);
+            item.item.x = calculateInverseX(docDefinition, item);
           }
 					renderImage(item.item, item.item.x, item.item.y, pdfKitDoc);
 					break;
 				case 'svg':
-          if (docDefinition && docDefinition.direction === "vertical") {
-            item.item.y = calculateVerticalY(docDefinition, item);
+          if (docDefinition && docDefinition.direction === "rotate-right") {
+            item.item.y = calculateRightY(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "rotate-left") {
+            item.item.x = calculateLeftX(docDefinition, item);
+          }
+          if (docDefinition && docDefinition.direction === "inverse") {
+            item.item.y = calculateInverseY(docDefinition, item);
+            item.item.x = calculateInverseX(docDefinition, item);
           }
 					renderSVG(item.item, item.item.x, item.item.y, pdfKitDoc, fontProvider);
 					break;
