@@ -61,18 +61,17 @@ function parseLine(line) {
 }
 
 function getLines(str) {
-  const parsed = [];
-  if (!str.replace) {
-    return parsed;
+  if (str && str.replace) {
+    const lines = str.replace(/\r\n/g, '<br/>')
+      .replace(/\n/g, '<br/>')
+      .replace(/\r/g, '<br/>')
+      .replace(/<br>/ig, '<br/>')
+      .split('<br/>');
+    return lines.map((line) => {
+      return parseLine(line);
+    }).join(",");
   }
-  const lines = str.replace(/\r\n/g, '<br/>')
-    .replace(/\n/g, '<br/>')
-    .replace(/\r/g, '<br/>')
-    .replace(/<br>/ig, '<br/>')
-    .split('<br/>');
-  return lines.map((line) => {
-    return parseLine(line);
-  }).join(",");
+  return `{"text": ""}`;
 }
 
 function Html(engine) {

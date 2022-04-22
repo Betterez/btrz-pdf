@@ -390,6 +390,25 @@ and some more here`,
     });
   });
 
+  it("should not break if h has not data", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- h lexiconKeys.toc -%}
+      ]
+    }`;
+    const d = {
+    }
+    const documentDefinition = await pdf.toDocumentDefinition(template, d);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "text": ""
+        }
+      ]
+    });
+  });
+
   it("should return a parsed liquidTemplate", async () => {
     const pdf = require("../src/index");
     const template = `{
