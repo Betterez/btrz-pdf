@@ -340,6 +340,7 @@ Parameters
 |------|------------|----------|---------|
 | item | An object in the data given to the liquid template | N | ticket
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
+| applyTimeZone | If you want to adjust the date with the account timeZone | N | true
 
 ```liquid
 {% raw %} {%- dateF ticket createdAt -%} {% endraw %} //"12/21/2021"
@@ -355,6 +356,7 @@ Parameters
 |------|------------|----------|---------|
 | item | An object in the data given to the liquid template | N | ticket
 | propName | The name of the property of the item (it should be a BzDate object or a time string) | N | createdAt
+| applyTimeZone | If you want to adjust the date with the account timeZone | N | true
 
 ```liquid
 {% raw %} {%- timeF ticket createdAt -%} {% endraw %} //"11:38 AM"
@@ -389,6 +391,7 @@ Parameters
 |------|------------|----------|---------|
 | item | An object in the data given to the liquid template | N | ticket
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
+| applyTimeZone | If you want to adjust the date with the account timeZone | N | true
 
 ```liquid
 {% raw %} {%- humanDate ticket createdAt -%} {% endraw %} //"Tue Dec 21, 2021"
@@ -408,6 +411,7 @@ Parameters
 |------|------------|----------|---------|
 | item | An object in the data given to the liquid template | N | ticket
 | propName | The name of the property of the item (it should be a BzDate object) | N | createdAt
+| applyTimeZone | If you want to adjust the date with the account timeZone | N | true
 
 ```liquid
 {% raw %} {%- humanDateTime ticket createdAt -%} {% endraw %} //"Tue Dec 21, 2021 11:38 AM"

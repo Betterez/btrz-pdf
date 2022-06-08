@@ -23,13 +23,10 @@ function formatBzDate(bzDate, format, envs) {
 function formatBzDate2(bzDate, format, envs) {
   const lang = shortLang(envs.lang);
   const timeFormat = envs.providerPreferences.preferences.timeFormat;
-  // const timeZone = envs.providerPreferences.preferences.timeZone;
-  // const offset = timezones.getOffset(timeZone, bzDate);
-  // const createdLocal = bzDate.addMinutes(offset);
   return `${formatter.dateFormat(bzDate.toString(`'yyyy-mm-dd' ${timeFormat}`), `${format}`, false, lang)}`;
 }
 
-function getDate(envs, item, propName, format) {
+function getDate(envs, item, propName, format, applyTimeZone) {
   let dateObjOrString = envs[item][propName];
   if (dateObjOrString && dateObjOrString.toUpperCase) {
     dateObjOrString = {
@@ -38,6 +35,9 @@ function getDate(envs, item, propName, format) {
     };
   }
   const date = new BzDate(dateObjOrString);
+  if (applyTimeZone == false) {
+    return formatBzDate2(date, format, envs);
+  }
   return formatBzDate(date, format, envs);
 }
 
@@ -51,13 +51,16 @@ function HumanDateTime(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      this.applyTimeZone = true;
+      if (args.length > 2) {
+        this.applyTimeZone = args[2] === "true"
+      }
     },
     render: async function(ctx) {
-     
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
         ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
         const format = `${getFriendlyFormat(ctx.environments.humanDate || "mm")} ${ ctx.environments.providerPreferences.preferences.timeFormat}`;
-        return getDate(ctx.environments, this.item, this.propName, format);
+        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
       }
       return "PNA";
     }
@@ -70,13 +73,17 @@ function HumanDate(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      this.applyTimeZone = true;
+      if (args.length > 2) {
+        this.applyTimeZone = args[2] === "true"
+      }
     },
     render: async function(ctx) {
      
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
         ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
         const format = getFriendlyFormat(ctx.environments.humanDate || "mm");
-        return getDate(ctx.environments, this.item, this.propName, format);
+        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
       }
       return "PNA";
     }
@@ -110,12 +117,15 @@ function DateF(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      if (args.length > 2) {
+        this.applyTimeZone = args[2] === "true"
+      }
     },
     render: async function(ctx) {
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
         ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
         const format = ctx.environments.providerPreferences.preferences.dateFormat;
-        return getDate(ctx.environments, this.item, this.propName, format);
+        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
       }
       return "PNA";
     }
@@ -128,6 +138,9 @@ function TimeF(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      if (args.length > 2) {
+        this.applyTimeZone = args[2] === "true"
+      }
     },
     render: async function(ctx) {
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
@@ -136,7 +149,7 @@ function TimeF(engine) {
         if (ctx.environments[this.item][this.propName].toUpperCase && ctx.environments[this.item][this.propName].indexOf("T") === -1){ 
           return getTimeFromString(ctx.environments[this.item][this.propName], format);
         }
-        return getDate(ctx.environments, this.item, this.propName, format);
+        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
       }
       return "PNA";
     }

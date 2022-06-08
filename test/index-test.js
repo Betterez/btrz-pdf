@@ -345,7 +345,11 @@ and some more here`,
         "{%- dateTime ticket arrivalTimestamp %}",
         "{%- dateTime ticket arrivalTimestamp mm/dd/yyyy hh:MM:ss %}",
         "{%- dateF ticket arrivalTimestamp %}",
-        "{%- timeF ticket arrivalTimestamp %}"
+        "{%- timeF ticket arrivalTimestamp %}",
+        "{%- humanDateTime ticket arrivalTimestamp false%}",
+        "{%- humanDate ticket arrivalTimestamp false%}",
+        "{%- dateF ticket arrivalTimestamp false %}",
+        "{%- timeF ticket arrivalTimestamp false %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -356,7 +360,11 @@ and some more here`,
         "01/19/2022 8:00 AM",
         "01/19/2022 08:00:00",
         "01/19/2022",
-        "8:00 AM"
+        "8:00 AM",
+        "Mié Ene 19, 2022 1:00 PM",
+        "Mié Ene 19, 2022",
+        "01/19/2022",
+        "1:00 PM"
       ]
     });
   });
