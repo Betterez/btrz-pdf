@@ -129,6 +129,15 @@ and some more here`,
           offset: 0
         }
       },
+      invoiceProvider: {
+        currencies:[
+          {
+            isocode: "GTQ",
+            symbol: "Q",
+            printSymbol: true
+          }
+        ]
+      },
       localizer: {
         get: (key) => {
           if (key === "html") {
@@ -271,7 +280,8 @@ and some more here`,
         "{% toLetters ticket.displayTotalStr %}",
         "{% toLetters ticket.displayTotalStr2 %}",
         "{% toLetters ticket.displayTotalStr3 %}",
-        "{% curcyName ticket %}"
+        "{% curcyName ticket %}",
+        "{% curcyName invoiceProvider.currencies[0] %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -280,7 +290,8 @@ and some more here`,
         "Veintiocho =>with treinta y seis =>cents",
         "Doscientos ochenta y nueve",
         "Doscientos ochenta y nueve",
-        "=>CAD"
+        "=>CAD",
+        "=>GTQ"
       ]
     })
   });

@@ -175,6 +175,9 @@ function CurcyName(engine) {
     render: async function(ctx) {
       const item = await this.liquid.evalValue(this.item, ctx);
       if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences && item) {
+        if (item.isocode !== undefined && item.symbol !== undefined) { 
+          return ctx.environments.localizer.get((item || {}).isocode || " ");
+        }
         const itemCurrency = getCurrency(item, ctx.environments.providerPreferences);
         return ctx.environments.localizer.get((itemCurrency || {}).isocode || " ");
       }

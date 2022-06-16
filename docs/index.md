@@ -532,6 +532,19 @@ Parameters
 ```liquid
 "{% raw %} {%- moneyReduce ticket.fees subTotal -%} {% endraw %}"
 ```
+* ## curcyName
+
+Returns the currency name based on the displayCurrency of the item provided and the account configuration. If the item provided is a currency, it will just use that currency,
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+```liquid
+{% raw %} {%- curcyName ticket -%} {% endraw %}",
+```
 
 * ## curcySymbol
 
