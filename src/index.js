@@ -61,6 +61,16 @@ module.exports = {
       throw err;
     }
   },
+  parseQuotesInData(data) {
+    for (let prop in data) {
+      if (typeof data[prop] === "string") {
+        data[prop] = data[prop].replace(/\"/g, '\\"');
+      } else if (typeof data[prop] === "object") {
+        this.parseQuotesInData(data[prop]);
+      }
+    }
+    return data;
+  },
   async toDocumentDefinition(liquidTemplate, data) {
     const engine = new Liquid();
     engine.plugin(Localizer);
@@ -82,8 +92,8 @@ module.exports = {
     engine.plugin(QrString);
     engine.plugin(ToLetters);
     engine.plugin(HttpImg);
-    const str = await engine.parseAndRender(liquidTemplate, data);
-    // console.log(str);
+    const str = await engine.parseAndRender(liquidTemplate, this.parseQuotesInData(data));
+    
     try {
       return JSON.parse(str);
     } catch (err) {
