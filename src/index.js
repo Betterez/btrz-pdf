@@ -61,18 +61,15 @@ module.exports = {
       throw err;
     }
   },
-  parseQuotesInData(data) {
-    for (let prop in data) {
-      if (typeof data[prop] === "string") {
-        data[prop] = data[prop].replace(/\"/g, '\\"');
-      } else if (typeof data[prop] === "object") {
-        this.parseQuotesInData(data[prop]);
-      }
-    }
-    return data;
-  },
   async toDocumentDefinition(liquidTemplate, data) {
-    const engine = new Liquid();
+    const engine = new Liquid({
+      outputEscape: (val) => {
+        if (typeof val === "string" && val.includes('"')) {
+          return val.replace(/"/g, '\\"');
+        }
+        return val;
+      }
+    });
     engine.plugin(Localizer);
     engine.plugin(Html);
     engine.plugin(HorizontalLine);
@@ -92,7 +89,7 @@ module.exports = {
     engine.plugin(QrString);
     engine.plugin(ToLetters);
     engine.plugin(HttpImg);
-    const str = await engine.parseAndRender(liquidTemplate, this.parseQuotesInData(data));
+    const str = await engine.parseAndRender(liquidTemplate, data);
     
     try {
       return JSON.parse(str);
