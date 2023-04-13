@@ -64,8 +64,15 @@ module.exports = {
   async toDocumentDefinition(liquidTemplate, data) {
     const engine = new Liquid({
       outputEscape: (val) => {
-        if (typeof val === "string" && val.includes('"')) {
-          return val.replace(/"/g, '\\"');
+        if (typeof val === "string") {
+          return val.replace(/[\\]/g, '\\\\')
+          .replace(/[\"]/g, '\\"')
+          .replace(/[\/]/g, '\\/')
+          .replace(/[\b]/g, '\\b')
+          .replace(/[\f]/g, '\\f')
+          .replace(/[\n]/g, '\\n')
+          .replace(/[\r]/g, '\\r')
+          .replace(/[\t]/g, '\\t');
         }
         return val;
       }
@@ -93,6 +100,7 @@ module.exports = {
     
     try {
       return JSON.parse(str);
+
     } catch (err) {
       err.data = str;
       throw err;
