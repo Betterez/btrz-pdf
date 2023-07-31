@@ -67,7 +67,6 @@ module.exports = {
         if (typeof val === "string") {
           return val.replace(/[\\]/g, '\\\\')
           .replace(/[\"]/g, '\\"')
-          .replace(/[\']/g, "\\'")
           .replace(/[\/]/g, '\\/')
           .replace(/[\b]/g, '\\b')
           .replace(/[\f]/g, '\\f')
