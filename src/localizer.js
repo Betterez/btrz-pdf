@@ -10,10 +10,10 @@ function Localizer(engine) {
     render: async function(ctx) {
       let str = await this.liquid.evalValue(this.str, ctx);
       if (ctx && ctx.environments && ctx.environments.localizer && ctx.environments.localizer.get) {
-        str = ctx.environments.localizer.get(str).replace(/[\']/g, "\\'");
+        str = ctx.environments.localizer.get(str);
       }
       if (this.tags) {
-        return await this.liquid.evalValue(`'${str}'|${this.tags}`, ctx);
+        return await this.liquid.evalValue(`"${str.replace(/"/g, '``')}"|${this.tags}`, ctx);
       }
       return str;
     }

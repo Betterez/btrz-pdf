@@ -149,6 +149,15 @@ and some more here`,
           if (key === "text") {
             return "text here please";
           }
+          if ( key === "french") {
+            return "Date / heure d'arrivée:";
+          }
+          if ( key === "double") {
+            return `This " is " awesome`;
+          }
+          if (key === "complex") {
+            return `Some ' complex ' string" here" \``
+          }
           return `=>${key}`;
         }
       },
@@ -229,13 +238,17 @@ and some more here`,
     const pdf = require("../src/index");
     const template = `{
       "content": [
-        "{% t 'text' | upcase %}"
+        "{% t 'french' | upcase %}",
+        "{% t 'double' | upcase %}",
+        "{% t 'complex' | upcase %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
     expect(documentDefinition).to.be.eql({
       "content": [
-        "TEXT HERE PLEASE"
+        "DATE / HEURE D'ARRIVÉE:",
+        "THIS `` IS `` AWESOME",
+        "SOME ' COMPLEX ' STRING`` HERE`` `"
       ]
     });
   });
@@ -501,12 +514,28 @@ and some more here`,
       "content": [
         {%- barcode -%},
         {%- barcode 1234 code128 10 2 10,5,2,4 -%},
-        {%- barcode 1234 code128 10 2 10,5 -%}
+        {%- barcode 1234 code128 10 2 10,5 -%},
+        {% t 'french' %}
       ]
     }`;
     pdf.returnPdfBinary(template, data, (err, doc) => {
       expect(doc).to.not.equal(undefined);
       done();
+    });
+  });
+
+  it("should return a french translation", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        "{% t 'french' %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "Date / heure d'arrivée:"
+      ]
     });
   });
 });
