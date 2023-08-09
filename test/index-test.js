@@ -158,6 +158,9 @@ and some more here`,
           if (key === "complex") {
             return `Some ' complex ' string" here" \``
           }
+          if (key === "textWithTab") {
+            return "	Some text 	 with tabs 	 here";
+          }
           return `=>${key}`;
         }
       },
@@ -535,6 +538,23 @@ and some more here`,
     expect(documentDefinition).to.be.eql({
       "content": [
         "Date / heure d'arrivée:"
+      ]
+    });
+  });
+
+  it("should return a text tag with escaped tabs", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- h 'textWithTab' -%}
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "text": "\tSome text \t with tabs \t here"
+        }
       ]
     });
   });

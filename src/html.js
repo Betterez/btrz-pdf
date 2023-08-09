@@ -83,7 +83,7 @@ function Html(engine) {
       let str = await this.liquid.evalValue(this.str, ctx);
       
       if (ctx && ctx.environments && ctx.environments.localizer && ctx.environments.localizer.get) {
-        return getLines(ctx.environments.localizer.get(str));
+        return getLines(ctx.environments.localizer.get(str).replace(/[\t]/g, '\\t'));
       }
       return getLines(str);
     }
