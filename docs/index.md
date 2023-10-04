@@ -377,6 +377,69 @@ Parameters
 {% raw %} {%- expDate reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
 ```
 
+* ## arrivalDateTime
+
+Convenience method that will calculate the arrival date for a reservation and will apply the arrival station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- arrivalDateTime reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
+```
+
+
+* ## departureDateTime
+
+Convenience method that will calculate the departure date for a reservation and will apply the departure station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- departureDateTime reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
+```
+
+* ## humanArrivalDateTime
+
+Convenience method that will calculate the arrival date for a reservation and will apply the arrival station timeZone if available. It will format the date using the `humanDate` property given to the template. `humanDate` can be either 'mm' or 'dd', default to 'mm'.
+
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- humanArrivalDateTime reservation -%} {% endraw %} //"Tue Dec 21, 2021 11:38 AM"
+```
+
+
+* ## humanDepartureDateTime
+
+Convenience method that will calculate the departure date for a reservation and will apply the departure station timeZone if available. It will format the date using the `humanDate` property given to the template. `humanDate` can be either 'mm' or 'dd', default to 'mm'.
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- humanDepartureDateTime reservation -%} {% endraw %} //"Tue Dec 21, 2021 11:38 AM"
+```
+
 * ## humanDate
 
 Convenience method that will default format based on the  `humanDate` property given to the template as part of the data object. `humanDate` can be either 'mm' or 'dd'

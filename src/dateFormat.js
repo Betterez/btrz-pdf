@@ -207,12 +207,141 @@ function ExpDate(engine) {
   });
 }
 
+function DepartureDateTime(engine) {
+  this.registerTag("departureDateTime", {
+    parse: function(tagToken, remainTokens) {
+      const args = tagToken.args.split(" ");
+      this.item = args[0] || "ticket";
+      this.applyTimeZone = true;
+    },
+    render: async function(ctx) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
+        ctx.environments[this.item] && ctx.environments[this.item].departureTimestamp && ctx.environments.fromStation) {
+        const dateFormat = ctx.environments.providerPreferences.preferences.dateFormat;
+        const timeFormat = ctx.environments.providerPreferences.preferences.timeFormat;
+        const originStationTimezone = ctx.environments.fromStation.timeZone
+        if (originStationTimezone) {
+          const lang = shortLang(ctx.environments.lang);
+          const date = moment(ctx.environments[this.item].departureTimestamp).tz(originStationTimezone).format("YYYY-MM-DD");
+          const time = moment(ctx.environments[this.item].departureTimestamp).tz(originStationTimezone).format("HH:mm");
+          const formattedDate = formatter.dateFormat(date, dateFormat, true, lang);
+          const formattedTime = formatter.timeFormat(time, timeFormat);
+
+          return `${formattedDate} ${formattedTime}`;
+        } else {
+          // Legacy logic which does not consider that the timezone of the origin station may differ from the account's timezone.
+          // For reservations, this logic may produce an incorrect / misleading date and time.
+          const format = `${dateFormat} ${timeFormat}`;
+          return getDate(ctx.environments, this.item, "departureTimestamp", format, this.applyTimeZone);
+        }
+        
+      }
+      return "PNA";
+    }
+  });
+}
+
+function ArrivalDateTime(engine) {
+  this.registerTag("arrivalDateTime", {
+    parse: function(tagToken, remainTokens) {
+      const args = tagToken.args.split(" ");
+      this.item = args[0] || "ticket";
+      this.applyTimeZone = true;
+    },
+    render: async function(ctx) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
+        ctx.environments[this.item] && ctx.environments[this.item].arrivalTimestamp && ctx.environments.toStation) {
+        const lang = shortLang(ctx.environments.lang);
+        const dateFormat = ctx.environments.providerPreferences.preferences.dateFormat;
+        const timeFormat = ctx.environments.providerPreferences.preferences.timeFormat;
+        const originStationTimezone = ctx.environments.toStation.timeZone
+        if (originStationTimezone) {
+          const date = moment(ctx.environments[this.item].arrivalTimestamp).tz(originStationTimezone).format("YYYY-MM-DD");
+          const time = moment(ctx.environments[this.item].arrivalTimestamp).tz(originStationTimezone).format("HH:mm");
+          const formattedDate = formatter.dateFormat(date, dateFormat, true, lang);
+          const formattedTime = formatter.timeFormat(time, timeFormat);
+
+          return `${formattedDate} ${formattedTime}`;
+        } else {
+          // Legacy logic which does not consider that the timezone of the origin station may differ from the account's timezone.
+          // For reservations, this logic may produce an incorrect / misleading date and time.
+          const format = `${dateFormat} ${timeFormat}`;
+          return getDate(ctx.environments, this.item, "arrivalTimestamp", format, this.applyTimeZone);
+        }
+        
+      }
+      return "PNA";
+    }
+  });
+}
+
+function HumanDepartureDateTime(engine) {
+  this.registerTag("humanDepartureDateTime", {
+    parse: function(tagToken, remainTokens) {
+      const args = tagToken.args.split(" ");
+      this.item = args[0] || "ticket";
+      this.applyTimeZone = true;
+    },
+    render: async function(ctx) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
+        ctx.environments[this.item] && ctx.environments[this.item].departureTimestamp && ctx.environments.fromStation) {
+        const timeFormat = ctx.environments.providerPreferences.preferences.timeFormat;
+        const format = `${getFriendlyFormat(ctx.environments.humanDate || "mm")} ${timeFormat}`;
+        const originStationTimezone = ctx.environments.fromStation.timeZone
+        if (originStationTimezone) {
+          const lang = shortLang(ctx.environments.lang);
+          const dateTime = moment(ctx.environments[this.item].departureTimestamp).tz(originStationTimezone).format(`YYYY-MM-DD ${timeFormat.replace("TT", "A").replace(/M/g, "m")}`);
+          return `${formatter.dateFormat(dateTime, `${format}`, false, lang)}`;
+        } else {
+          // Legacy logic which does not consider that the timezone of the origin station may differ from the account's timezone.
+          // For reservations, this logic may produce an incorrect / misleading date and time.
+          return getDate(ctx.environments, this.item, "departureTimestamp", format, this.applyTimeZone);
+        } 
+      }
+      return "PNA";
+    }
+  });
+}
+
+function HumanArrivalDateTime(engine) {
+  this.registerTag("humanArrivalDateTime", {
+    parse: function(tagToken, remainTokens) {
+      const args = tagToken.args.split(" ");
+      this.item = args[0] || "ticket";
+      this.applyTimeZone = true;
+    },
+    render: async function(ctx) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
+        ctx.environments[this.item] && ctx.environments[this.item].arrivalTimestamp && ctx.environments.toStation) {
+          const timeFormat = ctx.environments.providerPreferences.preferences.timeFormat;
+          const format = `${getFriendlyFormat(ctx.environments.humanDate || "mm")} ${timeFormat}`;
+          const originStationTimezone = ctx.environments.toStation.timeZone
+          if (originStationTimezone) {
+            const lang = shortLang(ctx.environments.lang);
+            const dateTime = moment(ctx.environments[this.item].arrivalTimestamp).tz(originStationTimezone).format(`YYYY-MM-DD ${timeFormat.replace("TT", "A").replace(/M/g, "m")}`);
+            return `${formatter.dateFormat(dateTime, `${format}`, false, lang)}`;
+          } else {
+            // Legacy logic which does not consider that the timezone of the origin station may differ from the account's timezone.
+            // For reservations, this logic may produce an incorrect / misleading date and time.
+            return getDate(ctx.environments, this.item, "arrivalTimestamp", format, this.applyTimeZone);
+          } 
+      }
+      return "PNA";
+    }
+  });
+}
+
+
 module.exports = {
   DateF,
   DateTime,
   ExpDate,
   HumanDate,
   HumanDateTime,
+  HumanDepartureDateTime,
+  HumanArrivalDateTime,
+  DepartureDateTime,
+  ArrivalDateTime,
   TimeF
 };
 
