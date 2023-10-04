@@ -109,6 +109,7 @@ and some more here`,
         "displayTotalStr2": "289",
         "displayTotalStr3": "289.00",
         arrivalTimestamp: "2022-01-19T13:00:00.000Z",
+        departureTimestamp: "2022-01-20T08:00:00.000Z",
         taxes: [],
         ssrs: [
           {
@@ -128,6 +129,12 @@ and some more here`,
           value: "2021-12-21T16:38:00.488Z",
           offset: 0
         }
+      },
+      fromStation: {
+        timeZone: "America/Toronto"
+      },
+      toStation: {
+        timeZone: "America/Toronto"
       },
       invoiceProvider: {
         currencies:[
@@ -376,7 +383,17 @@ and some more here`,
         "{%- humanDateTime ticket arrivalTimestamp false%}",
         "{%- humanDate ticket arrivalTimestamp false%}",
         "{%- dateF ticket arrivalTimestamp false %}",
-        "{%- timeF ticket arrivalTimestamp false %}"
+        "{%- timeF ticket arrivalTimestamp false %}",
+        "{%- arrivalDateTime ticket %}",
+        "{%- departureDateTime ticket %}",
+        "{%- humanArrivalDateTime ticket %}",
+        "{%- humanDepartureDateTime ticket %}",
+        "{%- arrivalDate ticket %}",
+        "{%- arrivalTime ticket %}",
+        "{%- departureDate ticket %}",
+        "{%- departureTime ticket %}",
+        "{%- humanArrivalDate ticket %}",
+        "{%- humanDepartureDate ticket %}"
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
@@ -391,7 +408,17 @@ and some more here`,
         "Mié Ene 19, 2022 8:00 AM",
         "Mié Ene 19, 2022",
         "01/19/2022",
-        "8:00 AM"
+        "8:00 AM",
+        "01/19/2022 8:00 AM",
+        "01/20/2022 3:00 AM",
+        "Mié Ene 19, 2022 8:00 AM",
+        "Jue Ene 20, 2022 3:00 AM",
+        "01/19/2022",
+        "8:00 AM",
+        "01/20/2022",
+        "3:00 AM",
+        "Mié Ene 19, 2022",
+        "Jue Ene 20, 2022",
       ]
     });
   });

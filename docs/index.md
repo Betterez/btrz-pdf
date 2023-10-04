@@ -377,6 +377,64 @@ Parameters
 {% raw %} {%- expDate reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
 ```
 
+* ## arrivalDate
+
+Convenience method that will calculate the arrival date for a reservation and will apply the arrival station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- arrivalDate reservation -%} {% endraw %} //"12/21/2021"
+```
+
+* ## departureDate
+
+Convenience method that will calculate the departure date for a reservation and will apply the departure station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+```liquid
+{% raw %} {%- departureDate reservation -%} {% endraw %} //"12/21/2021"
+```
+* ## arrivalTime
+
+Convenience method that will calculate the arrival time for a reservation and will apply the arrival station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- arrivalTime reservation -%} {% endraw %} //"11:38 AM"
+```
+
+* ## departureTime
+
+Convenience method that will calculate the departure time for a reservation and will apply the departure station timeZone if available
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+```liquid
+{% raw %} {%- departureTime reservation -%} {% endraw %} //"11:38 AM"
+```
+
+
 * ## arrivalDateTime
 
 Convenience method that will calculate the arrival date for a reservation and will apply the arrival station timeZone if available
@@ -406,6 +464,39 @@ Parameters
 
 ```liquid
 {% raw %} {%- departureDateTime reservation -%} {% endraw %} //"12/21/2021 11:38 AM"
+```
+
+
+* ## humanArrivalDate
+
+Convenience method that will calculate the arrival date for a reservation and will apply the arrival station timeZone if available. It will format the date using the `humanDate` property given to the template. `humanDate` can be either 'mm' or 'dd', default to 'mm'.
+
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- humanArrivalDate reservation -%} {% endraw %} //"Tue Dec 21, 2021"
+```
+
+
+* ## humanDepartureDate
+
+Convenience method that will calculate the departure date for a reservation and will apply the departure station timeZone if available. It will format the date using the `humanDate` property given to the template. `humanDate` can be either 'mm' or 'dd', default to 'mm'.
+
+Parameters
+
+| name | definition | required | default |
+|------|------------|----------|---------|
+| item | An object in the data given to the liquid template | N | ticket
+
+
+```liquid
+{% raw %} {%- humanDepartureDate reservation -%} {% endraw %} //"Tue Dec 21, 2021"
 ```
 
 * ## humanArrivalDateTime

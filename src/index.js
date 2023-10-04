@@ -4,7 +4,10 @@ const {HorizontalLine} = require("./lines.js");
 const {Barcode} = require("./barcode.js");
 const {Html} = require("./html.js");
 const {Money, CurcySymbol, CurcyIso, CurcyName, MoneyReduce} = require("./money.js");
-const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate, HumanArrivalDateTime, HumanDepartureDateTime, DepartureDateTime, ArrivalDateTime} = require("./dateFormat.js");
+const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate, HumanArrivalDateTime, HumanDepartureDateTime,
+  DepartureDateTime, ArrivalDateTime, DepartureDate, ArrivalDate, DepartureTime, ArrivalTime, HumanArrivalDate,
+  HumanDepartureDate
+} = require("./dateFormat.js");
 const {Text} = require("./text.js");
 const {QrString} = require("./qrstr.js");
 const {ToLetters} = require("./toletters.js");
@@ -95,6 +98,12 @@ module.exports = {
     engine.plugin(HumanDepartureDateTime);
     engine.plugin(DepartureDateTime);
     engine.plugin(ArrivalDateTime);
+    engine.plugin(DepartureDate);
+    engine.plugin(ArrivalDate);
+    engine.plugin(DepartureTime);
+    engine.plugin(ArrivalTime);
+    engine.plugin(HumanArrivalDate);
+    engine.plugin(HumanDepartureDate);
     engine.plugin(Text);
     engine.plugin(ExpDate);
     engine.plugin(QrString);
