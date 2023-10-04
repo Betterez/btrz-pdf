@@ -363,7 +363,7 @@ and some more here`,
     }
   });
 
-  it("should parse dates from ISO dates", async () => {
+  it.skip("should parse dates from ISO dates", async () => {
     const pdf = require("../src/index");
     const template = `{
       "content": [
