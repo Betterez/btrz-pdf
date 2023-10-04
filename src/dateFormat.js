@@ -132,6 +132,7 @@ function DateF(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      this.applyTimeZone = true;
       if (args.length > 2) {
         this.applyTimeZone = args[2] === "true"
       }
@@ -153,6 +154,7 @@ function TimeF(engine) {
       const args = tagToken.args.split(" ");
       this.item = args[0] || "ticket";
       this.propName = args[1] || "createdAt";
+      this.applyTimeZone = true;
       if (args.length > 2) {
         this.applyTimeZone = args[2] === "true"
       }
