@@ -21,23 +21,25 @@
   },
   "homepage": "https://github.com/Betterez/btrz-pdf#readme",
   "dependencies": {
-    "axios": "^0.27.2",
-    "btrz-formatter": "1.3.0",
-    "bz-date": "1.2.1",
-    "liquidjs": "^9.39.2",
-    "pdfjs": "^2.4.7",
-    "svg-to-pdfkit": "^0.1.8",
-    "symbology": "^3.0.8",
-    "written-number": "^0.11.1",
     "@foliojs-fork/linebreak": "^1.1.1",
     "@foliojs-fork/pdfkit": "^0.13.0",
+    "axios": "^0.27.2",
+    "btrz-formatter": "1.3.0",
+    "bz-date": "1.3.0",
     "iconv-lite": "^0.6.3",
-    "xmldoc": "^1.2.0"
+    "liquidjs": "^10.9.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "pdfjs": "^2.5.2",
+    "svg-to-pdfkit": "^0.1.8",
+    "symbology": "^3.0.13",
+    "written-number": "^0.11.1",
+    "xmldoc": "^1.3.0"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
-    "chai": "4.3.7",
+    "chai": "4.3.10",
     "mocha": "10.2.0",
-    "tinyify": "3.1.0"
+    "tinyify": "4.0.0"
   }
 }

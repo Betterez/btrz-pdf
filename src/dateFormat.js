@@ -1,5 +1,7 @@
 const {timezones, BzDate} = require("bz-date");
 const formatter = require("btrz-formatter");
+const moment = require("moment");
+require("moment-timezone");
 function shortLang(lang) {
   let result = "en";
   if (lang && lang.substring) {
@@ -20,6 +22,22 @@ function formatBzDate(bzDate, format, envs) {
   return `${formatter.dateFormat(createdLocal.toString(`'yyyy-mm-dd' ${timeFormat}`), `${format}`, false, lang)}`;
 }
 
+function formatMoment(date, format, envs, applyTimeZone) {
+  const lang = shortLang(envs.lang);
+  const timeFormat = envs.providerPreferences.preferences.timeFormat;
+  const timeZone = envs.providerPreferences.preferences.timeZone;
+  const timeFormatCompatibleWithMomentJS = timeFormat.replace("TT", "A").replace(/M/g, "m");
+  let strDate = "";
+  if (applyTimeZone) {
+    strDate = moment(date).tz(timeZone.tz)
+      .format(`'YYYY-MM-DD' ${timeFormatCompatibleWithMomentJS}`);
+  } else {
+    strDate = moment(date)
+      .format(`'YYYY-MM-DD' ${timeFormatCompatibleWithMomentJS}`);
+  }
+  return `${formatter.dateFormat(strDate, `${format}`, false, lang)}`;
+}
+
 function formatBzDate2(bzDate, format, envs) {
   const lang = shortLang(envs.lang);
   const timeFormat = envs.providerPreferences.preferences.timeFormat;
@@ -29,10 +47,7 @@ function formatBzDate2(bzDate, format, envs) {
 function getDate(envs, item, propName, format, applyTimeZone) {
   let dateObjOrString = envs[item][propName];
   if (dateObjOrString && dateObjOrString.toUpperCase) {
-    dateObjOrString = {
-      value: dateObjOrString,
-      offset: 0
-    };
+    return formatMoment(dateObjOrString, format, envs, applyTimeZone);
   }
   const date = new BzDate(dateObjOrString);
   if (applyTimeZone == false) {
@@ -155,7 +170,6 @@ function TimeF(engine) {
     }
   });
 }
-
 
 function ExpDate(engine) {
   this.registerTag("expDate", {
