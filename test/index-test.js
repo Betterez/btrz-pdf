@@ -89,7 +89,7 @@ and some more here`,
             }
           ]
         }
-      }, 
+      },
       tickets: [
         {
           fare: "adult",
@@ -582,6 +582,21 @@ and some more here`,
         {
           "text": "\tSome text \t with tabs \t here"
         }
+      ]
+    });
+  });
+
+  it("should return a translation with double quotes replaced with `` ", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        "{% t 'double' %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+          "This `` is `` awesome"
       ]
     });
   });

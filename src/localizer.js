@@ -15,7 +15,7 @@ function Localizer(engine) {
       if (this.tags) {
         return await this.liquid.evalValue(`"${str.replace(/"/g, '``')}"|${this.tags}`, ctx);
       }
-      return str;
+      return await this.liquid.evalValue(`"${str.replace(/"/g, '``')}"`, ctx);
     }
 });
 }
