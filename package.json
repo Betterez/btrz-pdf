@@ -1,6 +1,6 @@
 {
   "name": "btrz-pdf",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Generates pdf documents based on a liquid template",
   "main": "src/index.js",
   "scripts": {
