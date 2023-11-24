@@ -22,6 +22,9 @@ function QrString(engine) {
       if (this.str === "redeemableitem") {
         return `RI-${ctx.environments.redeemableItem._id.toString()}`;
       }
+      if (this.str === "voucher") {
+        return `${ctx.environments.voucher.internalId}`;
+      }
       return ""
     }
 });
