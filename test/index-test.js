@@ -244,6 +244,58 @@ and some more here`,
     });
   });
 
+  it("should return an object with a header page number", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "headerFn": {
+        "text": "Page currentPage of pageCount"
+      },
+      "content": [
+        {
+          "text": "Hello"
+        }
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition.content).to.be.eql([
+        {
+          "text": "Hello"
+        }
+      ]);
+      expect(documentDefinition.header(1, 2)).to.be.eql([
+        {
+          "text": "Page 1 of 2",
+          "style": "header"
+        }
+      ]);
+  });
+
+  it("should return an object with a footer page number", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "footerFn": {
+        "text": "Page currentPage of pageCount"
+      },
+      "content": [
+        {
+          "text": "Hello"
+        }
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition.content).to.be.eql([
+        {
+          "text": "Hello"
+        }
+      ]);
+      expect(documentDefinition.footer(1, 2)).to.be.eql([
+        {
+          "text": "Page 1 of 2",
+          "style": "footer"
+        }
+      ]);
+  });
+
   it("should apply tag after translations", async () => {
     const pdf = require("../src/index");
     const template = `{

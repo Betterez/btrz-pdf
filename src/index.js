@@ -112,7 +112,35 @@ module.exports = {
     const str = await engine.parseAndRender(liquidTemplate, data);
     
     try {
-      return JSON.parse(str);
+      const obj = JSON.parse(str);
+
+      if (obj.headerFn && obj.headerFn.text && obj.headerFn.text.replace) {
+        obj.header = function(currentPage, pageCount, pageSize) {
+          const txt = obj.headerFn.text
+            .replace(/currentPage/g, currentPage)
+            .replace(/pageCount/g, pageCount);
+          return [
+            {
+              "text": txt,
+              "style": obj.headerFn.style || "header"            
+            }
+          ];
+        }
+      }
+      if (obj.footerFn && obj.footerFn.text && obj.footerFn.text.replace) {
+        obj.footer = function(currentPage, pageCount, pageSize) {
+          const txt = obj.footerFn.text
+            .replace(/currentPage/g, currentPage)
+            .replace(/pageCount/g, pageCount);
+          return [
+            {
+              "text": txt,
+              "style": obj.footerFn.style || "footer"          
+            }
+          ];
+        }
+      }
+      return obj;
 
     } catch (err) {
       err.data = str;

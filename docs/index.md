@@ -232,6 +232,32 @@ You can add `"direction": "rotate-right"` to rotate the text and barcodes in the
 You can add `"direction": "inverse"` to rotate the text and barcodes in the template 180 degrees.
 You can add `"direction": "rotate-left"` to rotate the text and barcodes in the template 270 degrees.
 
+* ## headerFn and footerFn
+
+You can use this new document properties to add headers or footers with page numbers and total pages. The use is the same for both.
+This properties need to be declared at the same level as the content property and not inside the content property.
+
+
+```liquid
+"headerFn": {
+        "text": "{{providerPreferences.preferences.ticketFields.header.content | strip_newlines }} currentPage of pageCount",
+        "style": "headerFooter"
+}
+
+"footerFn": {
+        "text": "{{providerPreferences.preferences.ticketFields.footer.content | strip_newlines }} currentPage of pageCount",
+        "style": "headerFooter"
+}
+```
+
+In the example below assuming the `header.content` is the text "Page #" it will print something like this for the first page of a document with 5 pages.
+
+```txt
+
+Page # 1 of 5
+
+```
+
 ## Custom tags
 
 * ## barcode
@@ -265,7 +291,6 @@ It will use the value given and use generate a 'code11' barcode with a height of
 
 It supports all types supported by [https://symbology.dev/](Symbology).
 While symbology supports QRCODE PDFMake also had support for QR natively and we recommend it.
-
 
 * ## qrstr
 
