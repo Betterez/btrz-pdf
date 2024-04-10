@@ -66,6 +66,11 @@ module.exports = {
   },
   async toDocumentDefinition(liquidTemplate, data) {
     const engine = new Liquid({
+      layouts: ["/nowhere/"],
+      root: ["/nowhere/"],
+      partials: ["/nowhere/"],
+      extname: ".liquid",
+      dynamicPartials: false,
       outputEscape: (val) => {
         if (typeof val === "string") {
           return val.replace(/[\\]/g, '\\\\')
