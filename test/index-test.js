@@ -652,4 +652,34 @@ and some more here`,
       ]
     });
   });
+
+  it("should allow to loop over an object keys", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {% assign objectKeys = ticket.displayCurrency | keys %}
+        {% for aKey in objectKeys %}
+          {% if forloop.first %}
+            {
+          {% endif %}
+          {% unless forloop.last %}
+            "key{{forloop.index}}": "{{aKey}}",
+          {% else %}
+            "key{{forloop.index}}": "{{aKey}}"}
+          {% endunless %}
+        {% endfor %}
+      ]
+    }`
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "key1": "isocode",
+          "key2": "symbol",
+          "key3": "buy",
+          "key4": "sell",
+        }
+      ]
+    });
+  });
 });

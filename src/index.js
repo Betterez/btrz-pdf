@@ -13,6 +13,7 @@ const {QrString} = require("./qrstr.js");
 const {ToLetters} = require("./toletters.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
 const {HttpImg} = require("./httpimg.js");
+const {Keys} = require("./object.js");
 const pdfjs = require("pdfjs");
 
 module.exports = {
@@ -114,8 +115,8 @@ module.exports = {
     engine.plugin(QrString);
     engine.plugin(ToLetters);
     engine.plugin(HttpImg);
+    engine.plugin(Keys);
     const str = await engine.parseAndRender(liquidTemplate, data);
-    
     try {
       const obj = JSON.parse(str);
 

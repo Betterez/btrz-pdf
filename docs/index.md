@@ -786,3 +786,30 @@ Parameters
 ```liquid
 {% raw %} {%- httpImg brand.logos.default -%} {% endraw %} // data:image/png;base64,77+9UE5HDQoaCgAAAA1JSERSAAA...
 ```
+
+### Supported filters
+
+* ## keys
+
+Given an Object converts it to an array of keys.
+
+For this object:
+```json
+{
+  "prop1": "value1",
+  "prop2": "value2"
+}
+```
+You can iterate over the object keys
+
+```liquid
+{% raw %} 
+{%- assign objectKeys = brand.logos.default -%} 
+{%- for aKey in objectKeys -%} 
+  Key number {%forloop.index%} : {{aKey}}
+{%- endfor -%} 
+{% endraw %} 
+
+//"Key number 1: prop1"
+//"Key number 2: prop2"
+```
