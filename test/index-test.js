@@ -590,6 +590,54 @@ and some more here`,
     });
   });
 
+  it("should format dateTime outside and inside a for loop", async () => {
+    data.things = [
+      {
+        id: 1,
+        createdAt: {
+          value: "2021-12-21T16:38:00.488Z",
+          offset: 0
+        }
+      },
+      {
+        id: 2,
+        createdAt: {
+          value: "2021-12-22T16:32:22.488Z",
+          offset: 0
+        }
+      }
+    ];
+    data.transaction.updatedAt = {
+      value: "2021-12-20T16:08:00.488Z",
+      offset: 0
+    };
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- for thing in things -%}
+          "{{thing.id}}",
+          "{%- dateTime thing createdAt %}",
+          "{%- dateTime thing wrongProp %}",
+        {%- endfor -%}
+        "{%- dateTime transaction updatedAt %}",
+        "{%- dateTime transaction wrongProp %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "1",
+        "12/21/2021 11:38 AM",
+        "PNA",
+        "2",
+        "12/22/2021 11:32 AM",
+        "PNA",
+        "12/20/2021 11:08 AM",
+        "PNA",
+      ]
+    });
+  });
+
   it("should return a pdf document", (done) => {
     const pdf = require("../src/index.js");
     const template = `{

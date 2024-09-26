@@ -45,7 +45,12 @@ function formatBzDate2(bzDate, format, envs) {
 }
 
 function getDate(envs, item, propName, format, applyTimeZone) {
-  let dateObjOrString = envs[item][propName];
+  let dateObjOrString = null;
+  if (item[propName]) {
+    dateObjOrString = item[propName];
+  } else {
+    dateObjOrString = envs[item][propName];
+  }
   if (dateObjOrString && dateObjOrString.toUpperCase) {
     return formatMoment(dateObjOrString, format, envs, applyTimeZone);
   }
@@ -105,6 +110,20 @@ function HumanDate(engine) {
   });
 }
 
+async function getNameOrValue(itemName, propName, ctx, liquid) {
+  if (ctx.environments[itemName]) {
+    if (!ctx.environments[itemName][propName]) {
+      return null;
+    }
+    return itemName;
+  }
+  const value = await liquid.evalValue(itemName, ctx);
+  if (!value || !value[propName]) {
+    return null;
+  }
+  return value;
+}
+
 function DateTime(engine) {
   this.registerTag("dateTime", {
     parse: function(tagToken, remainTokens) {
@@ -116,10 +135,12 @@ function DateTime(engine) {
       }
     },
     render: async function(ctx) {
-      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences) {
         const format = this.format || `${ctx.environments.providerPreferences.preferences.dateFormat} ${ctx.environments.providerPreferences.preferences.timeFormat}`;
-        return getDate(ctx.environments, this.item, this.propName, format);
+        const item = await getNameOrValue(this.item, this.propName, ctx, this.liquid);
+        if (item) {
+          return getDate(ctx.environments, item, this.propName, format);
+        }
       }
       return "PNA";
     }
