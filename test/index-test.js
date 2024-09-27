@@ -55,7 +55,11 @@ describe("index.js", () => {
           {
             amount: 30
           }
-        ]
+        ],
+        updatedAt: {
+          value: "2021-12-20T16:08:00.488Z",
+          offset: 0
+        }
       },
       providerPreferences: {
         preferences: {
@@ -607,10 +611,6 @@ and some more here`,
         }
       }
     ];
-    data.transaction.updatedAt = {
-      value: "2021-12-20T16:08:00.488Z",
-      offset: 0
-    };
     const pdf = require("../src/index");
     const template = `{
       "content": [
@@ -633,6 +633,39 @@ and some more here`,
         "12/22/2021 11:32 AM",
         "PNA",
         "12/20/2021 11:08 AM",
+        "PNA",
+      ]
+    });
+  });
+
+  it("should format dateF outside and inside a for loop", async () => {
+    data.things = [
+      {
+        data: {createdAt: {value: "2021-12-21T16:38:22.488Z", offset: 0}}
+      },
+      {
+        data: {createdAt: {value: "2021-12-22T16:32:22.488Z", offset: 0}}
+      }
+    ];
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- for thing in things -%}
+          "{%- dateF thing.data createdAt %}",
+          "{%- dateF thing.data wrongProp %}",
+        {%- endfor -%}
+        "{%- dateF transaction updatedAt %}",
+        "{%- dateF transaction wrongProp %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "12/21/2021",
+        "PNA",
+        "12/22/2021",
+        "PNA",
+        "12/20/2021",
         "PNA",
       ]
     });

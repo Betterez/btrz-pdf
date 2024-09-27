@@ -159,10 +159,12 @@ function DateF(engine) {
       }
     },
     render: async function(ctx) {
-      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences) {
         const format = ctx.environments.providerPreferences.preferences.dateFormat;
-        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
+        const item = await getNameOrValue(this.item, this.propName, ctx, this.liquid);
+        if (item) {
+          return getDate(ctx.environments, item, this.propName, format, this.applyTimeZone);
+        }
       }
       return "PNA";
     }
