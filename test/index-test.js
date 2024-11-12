@@ -671,6 +671,39 @@ and some more here`,
     });
   });
 
+  it("should format timeF outside and inside a for loop", async () => {
+    data.things = [
+      {
+        data: {createdAt: {value: "2021-12-21T16:38:22.488Z", offset: 0}}
+      },
+      {
+        data: {createdAt: {value: "2021-12-22T16:32:22.488Z", offset: 0}}
+      }
+    ];
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- for thing in things -%}
+          "{%- timeF thing.data createdAt %}",
+          "{%- timeF thing.data wrongProp %}",
+        {%- endfor -%}
+        "{%- timeF transaction updatedAt %}",
+        "{%- timeF transaction wrongProp %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "11:38 AM",
+        "PNA",
+        "11:32 AM",
+        "PNA",
+        "11:08 AM",
+        "PNA",
+      ]
+    });
+  });
+
   it("should return a pdf document", (done) => {
     const pdf = require("../src/index.js");
     const template = `{

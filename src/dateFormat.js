@@ -183,13 +183,12 @@ function TimeF(engine) {
       }
     },
     render: async function(ctx) {
-      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences &&
-        ctx.environments[this.item] && ctx.environments[this.item][this.propName]) {
+      if (ctx && ctx.environments && ctx.environments.providerPreferences && ctx.environments.providerPreferences.preferences) {
         const format = ctx.environments.providerPreferences.preferences.timeFormat;
-        if (ctx.environments[this.item][this.propName].toUpperCase && ctx.environments[this.item][this.propName].indexOf("T") === -1){ 
-          return getTimeFromString(ctx.environments[this.item][this.propName], format);
+        const item = await getNameOrValue(this.item, this.propName, ctx, this.liquid);
+        if (item) {
+          return getDate(ctx.environments, item, this.propName, format, this.applyTimeZone);
         }
-        return getDate(ctx.environments, this.item, this.propName, format, this.applyTimeZone);
       }
       return "PNA";
     }
