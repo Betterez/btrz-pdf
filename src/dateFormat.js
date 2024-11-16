@@ -187,6 +187,11 @@ function TimeF(engine) {
         const format = ctx.environments.providerPreferences.preferences.timeFormat;
         const item = await getNameOrValue(this.item, this.propName, ctx, this.liquid);
         if (item) {
+          const dateObjOrString = item?.[this.propName] || ctx.environments[item]?.[this.propName];
+          // Keep this for compatibility with time format (HH:mm)
+          if (dateObjOrString.toUpperCase && dateObjOrString.indexOf("T") === -1) {
+            return getTimeFromString(dateObjOrString, format);
+          }
           return getDate(ctx.environments, item, this.propName, format, this.applyTimeZone);
         }
       }

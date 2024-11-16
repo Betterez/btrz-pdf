@@ -671,6 +671,39 @@ and some more here`,
     });
   });
 
+  it("should correctly format 24-hour time strings (HH)", async () => {
+    data.things = [
+      {
+        data: {time: "20:53"}
+      },
+      {
+        data: {time: "10:53"}
+      }
+    ];
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {%- for thing in things -%}
+          "{%- timeF thing.data time %}",
+          "{%- timeF thing.data wrongProp %}",
+        {%- endfor -%}
+        "{%- timeF transaction updatedAt %}",
+        "{%- timeF transaction wrongProp %}"
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        "8:53 PM",
+        "PNA",
+        "10:53 AM",
+        "PNA",
+        "11:08 AM",
+        "PNA",
+      ]
+    });
+  });
+
   it("should format timeF outside and inside a for loop", async () => {
     data.things = [
       {
