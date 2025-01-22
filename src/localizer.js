@@ -9,7 +9,7 @@ function Localizer(engine) {
     },
     render: async function(ctx) {
       let str = await this.liquid.evalValue(this.str, ctx);
-      if (ctx && ctx.environments && ctx.environments.localizer && ctx.environments.localizer.get) {
+      if (ctx && ctx.environments && ctx.environments.localizer && ctx.environments.localizer.get && str !== "") {
         str = ctx.environments.localizer.get(str);
       }
       if (this.tags) {
