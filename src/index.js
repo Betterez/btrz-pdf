@@ -1,20 +1,6 @@
-const {Liquid} = require("liquidjs");
-const {Localizer} = require("./localizer.js");
-const {HorizontalLine} = require("./lines.js");
-const {Barcode} = require("./barcode.js");
-const {Html} = require("./html.js");
-const {Money, CurcySymbol, CurcyIso, CurcyName, MoneyReduce} = require("./money.js");
-const {DateF, TimeF, DateTime, HumanDate, HumanDateTime, ExpDate, HumanArrivalDateTime, HumanDepartureDateTime,
-  DepartureDateTime, ArrivalDateTime, DepartureDate, ArrivalDate, DepartureTime, ArrivalTime, HumanArrivalDate,
-  HumanDepartureDate
-} = require("./dateFormat.js");
-const {Text} = require("./text.js");
-const {QrString} = require("./qrstr.js");
-const {ToLetters} = require("./toletters.js");
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
-const {HttpImg} = require("./httpimg.js");
-const {Keys} = require("./object.js");
 const pdfjs = require("pdfjs");
+const tpl = require("btrz-liquid-templates");
 
 module.exports = {
   async mergePDFBuffers(buffers) {
@@ -66,57 +52,7 @@ module.exports = {
     }
   },
   async toDocumentDefinition(liquidTemplate, data) {
-    const engine = new Liquid({
-      layouts: ["/nowhere/"],
-      root: ["/nowhere/"],
-      partials: ["/nowhere/"],
-      extname: ".liquid",
-      dynamicPartials: false,
-      outputEscape: (val) => {
-        if (typeof val === "string") {
-          return val.replace(/[\\]/g, '\\\\')
-          .replace(/[\"]/g, '\\"')
-          .replace(/[\/]/g, '\\/')
-          .replace(/[\b]/g, '\\b')
-          .replace(/[\f]/g, '\\f')
-          .replace(/[\n]/g, '\\n')
-          .replace(/[\r]/g, '\\r')
-          .replace(/[\t]/g, '\\t');
-        }
-        return val;
-      }
-    });
-    engine.plugin(Localizer);
-    engine.plugin(Html);
-    engine.plugin(HorizontalLine);
-    engine.plugin(Barcode);
-    engine.plugin(Money);
-    engine.plugin(CurcySymbol);
-    engine.plugin(CurcyIso);
-    engine.plugin(CurcyName);
-    engine.plugin(MoneyReduce);
-    engine.plugin(DateF);
-    engine.plugin(TimeF);
-    engine.plugin(DateTime);
-    engine.plugin(HumanDate);
-    engine.plugin(HumanDateTime);
-    engine.plugin(HumanArrivalDateTime);
-    engine.plugin(HumanDepartureDateTime);
-    engine.plugin(DepartureDateTime);
-    engine.plugin(ArrivalDateTime);
-    engine.plugin(DepartureDate);
-    engine.plugin(ArrivalDate);
-    engine.plugin(DepartureTime);
-    engine.plugin(ArrivalTime);
-    engine.plugin(HumanArrivalDate);
-    engine.plugin(HumanDepartureDate);
-    engine.plugin(Text);
-    engine.plugin(ExpDate);
-    engine.plugin(QrString);
-    engine.plugin(ToLetters);
-    engine.plugin(HttpImg);
-    engine.plugin(Keys);
-    const str = await engine.parseAndRender(liquidTemplate, data);
+    const str = await tpl.processToString(liquidTemplate, data);
     try {
       const obj = JSON.parse(str);
 
