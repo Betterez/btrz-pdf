@@ -377,18 +377,42 @@ function calculateInverseX(docDefinition, item) {
   return (docDefinition.pageSize.width - item.item.x - docDefinition.pageMargins[0]) * -1;
 }
 
+function getDirectionRotation(docDefinition) {
+	if (docDefinition && docDefinition.direction) {
+		var rotations = {
+			"rotate-right": 90,
+			"inverse": 180,
+			"rotate-left": 270
+		};
+		return rotations[docDefinition.direction] || 0;
+	}
+	return 0;
+}
+
+function updateWatermarkAngle(page, docDefinition) {
+	if (!page || !page.watermark || !page.watermark.angle) {
+		return;
+	}
+	if (!docDefinition || !docDefinition.direction) {
+		return;
+	}
+	if (!docDefinition.watermark || !docDefinition.watermark.rotatedAngles) {
+		return;
+	}
+	console.log("watermark original angle", page.watermark.angle);
+	page.watermark.angle = docDefinition.watermark.rotatedAngles[docDefinition.direction] || page.watermark.angle;
+	console.log("watermark updated angle", page.watermark.angle);
+}
+
 function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback, docDefinition) {
 	pdfKitDoc._pdfMakePages = pages;
 	pdfKitDoc.addPage();
-  if (docDefinition && docDefinition.direction === "rotate-right") {
-    pdfKitDoc.rotate(90);
-  }
-  if (docDefinition && docDefinition.direction === "inverse") {
-    pdfKitDoc.rotate(180);
-  }
-  if (docDefinition && docDefinition.direction === "rotate-left") {
-    pdfKitDoc.rotate(270);
-  }
+
+	var directionRotation = getDirectionRotation(docDefinition);
+	if (directionRotation) {
+		pdfKitDoc.rotate(directionRotation);
+	}
+
 	var totalItems = 0;
 	if (progressCallback) {
 		pages.forEach(function (page) {
@@ -463,7 +487,14 @@ function renderPages(pages, fontProvider, pdfKitDoc, patterns, progressCallback,
 			progressCallback(renderedItems / totalItems);
 		}
 		if (page.watermark) {
+			if (directionRotation) {
+				pdfKitDoc.rotate(directionRotation * -1);
+				updateWatermarkAngle(page, docDefinition);
+			}
 			renderWatermark(page, pdfKitDoc);
+			if (directionRotation) {
+				pdfKitDoc.rotate(directionRotation);
+			}
 		}
 	}
 }
