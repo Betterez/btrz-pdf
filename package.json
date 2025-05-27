@@ -23,7 +23,7 @@
   "dependencies": {
     "@foliojs-fork/linebreak": "^1.1.2",
     "@foliojs-fork/pdfkit": "^0.15.3",
-    "btrz-liquid-templates": "1.6.0",
+    "btrz-liquid-templates": "1.7.0",
     "pdfjs": "^2.5.3",
     "svg-to-pdfkit": "^0.1.8",
     "written-number": "^0.11.1",
