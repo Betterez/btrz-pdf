@@ -209,7 +209,15 @@ and some more here`,
     expect(pdf).to.be.an.instanceOf(Object);
   });
 
-  it("should return the document as a buffer", async () => {
+  it("should not blow up if the document structure is incorrect", async () => {
+    const pdf = require("../src/index");
+    const template = pdf.defaultDocumentDefinition();
+    template.content.push({"image":"","height":20,"width":60});
+    const doc = await pdf.returnPdfBuffer(JSON.stringify(template), data);
+    expect(doc).to.be.an.instanceOf(Buffer);
+  });
+
+    it("should return the document as a buffer", async () => {
     const pdf = require("../src/index");
     const template = pdf.defaultDocumentDefinition();
     const doc = await pdf.returnPdfBuffer(JSON.stringify(template), data);

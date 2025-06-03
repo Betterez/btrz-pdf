@@ -68,7 +68,8 @@ DocMeasure.prototype.measureNode = function (node) {
 		} else if (node.qr) {
 			return extendMargins(self.measureQr(node));
 		} else {
-			throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
+			return node;
+      //throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
 		}
 	});
 

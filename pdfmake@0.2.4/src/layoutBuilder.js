@@ -412,7 +412,8 @@ LayoutBuilder.prototype.processNode = function (node) {
 		} else if (node.qr) {
 			self.processQr(node);
 		} else if (!node._span) {
-			throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
+      return node;
+			//throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
 		}
 
 		if (absPosition || relPosition) {

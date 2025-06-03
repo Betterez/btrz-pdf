@@ -59,7 +59,8 @@ DocPreprocessor.prototype.preprocessNode = function (node) {
 	} else if (node.pageReference || node.textReference) {
 		return this.preprocessText(node);
 	} else {
-		throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
+    return node;
+		//throw 'Unrecognized document structure: ' + JSON.stringify(node, fontStringify);
 	}
 };
 
