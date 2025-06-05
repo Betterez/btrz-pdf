@@ -256,6 +256,25 @@ and some more here`,
     });
   });
 
+  it("should allow to parse non images urls", async () => {
+    const pdf = require("../src/index");
+    const template = `{
+      "content": [
+        {
+          "image" : "{% httpImg 'https://www.google.com' %}"
+        }
+      ]
+    }`;
+    const documentDefinition = await pdf.toDocumentDefinition(template, data);
+    expect(documentDefinition).to.be.eql({
+      "content": [
+        {
+          "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAH0lEQVR42mP8P4PhPwMVAeOogaMGjho4auCogSPVQACqOzPNQ/wwqAAAAABJRU5ErkJggg=="
+        }
+      ]
+    });
+  })
+
   it("should return an object with a header page number", async () => {
     const pdf = require("../src/index");
     const template = `{
