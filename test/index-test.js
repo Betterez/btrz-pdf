@@ -1,5 +1,7 @@
 describe("index.js", () => {
   const {expect} = require("chai");
+  const { sanitizeJsonString } = require("../src/index.js");
+
   let data = null;
   beforeEach(() => {
     data = {
@@ -854,6 +856,25 @@ and some more here`,
           "key4": "sell",
         }
       ]
+    });
+  });
+
+  describe("sanitizeJsonString", () => {
+    it("should replace line breaks with two spaces", () => {
+      const input = "hello\nworld\r\nend\r\ngoodbye";
+      const output = sanitizeJsonString(input);
+      expect(output).to.equal("hello  world  end  goodbye");
+    });
+
+    it("should remove invisible control characters", () => {
+      const input = "hello\u0001world\u001F!";
+      const output = sanitizeJsonString(input);
+      expect(output).to.equal("helloworld!");
+    });
+
+    it("should throw an error if input is not a string (without breaking)", () => {
+      expect(() => sanitizeJsonString(null)).to.throw("INVALID_STRING");
+      expect(() => sanitizeJsonString(123)).to.throw("INVALID_STRING");
     });
   });
 });

@@ -51,10 +51,21 @@ module.exports = {
       throw err;
     }
   },
+  sanitizeJsonString(str) {
+    if (typeof str !== "string") {
+      throw new Error("INVALID_STRING");
+    }
+
+    return str
+      .replace(/(\r\n|\n|\r)/g, "  ") 
+      .replace(/[\u0000-\u001F]+/g, ""); 
+  },
   async toDocumentDefinition(liquidTemplate, data) {
     const str = await tpl.processToString(liquidTemplate, data);
+    const cleanStr = this.sanitizeJsonString(str);
+
     try {
-      const obj = JSON.parse(str);
+      const obj = JSON.parse(cleanStr);
 
       if (obj.headerFn && obj.headerFn.text && obj.headerFn.text.replace) {
         obj.header = function(currentPage, pageCount, pageSize) {
