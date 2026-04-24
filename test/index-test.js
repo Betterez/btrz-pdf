@@ -1,5 +1,7 @@
+const assert = require("node:assert/strict");
+const { beforeEach, describe, it } = require("node:test");
+
 describe("index.js", () => {
-  const {expect} = require("chai");
   const { sanitizeJsonString } = require("../src/index.js");
 
   let data = null;
@@ -184,31 +186,31 @@ and some more here`,
   it("should return a default document definition", () => {
     const pdf = require("../src/index.js");
     const docDef = pdf.defaultDocumentDefinition();
-    expect(docDef).to.be.an("object");
-    expect(docDef.content).to.be.an("array");
-    expect(docDef.content).to.be.eql([]);
-    expect(docDef.pageSize.width).to.be.eql(252);
-    expect(docDef.pageSize.height).to.be.eql("auto");
-    expect(docDef.pageMargins).to.be.eql([10,10,10,10]);
-    expect(docDef.pageOrientation).to.be.eql("portrait");
-    expect(docDef.defaultStyle).to.be.an("object");
-    expect(docDef.defaultStyle).to.be.eql({"font": "Helvetica", "fontSize": 10, "lineHeight": 1.3});
-    expect(docDef.styles).to.be.an("object");
-    expect(docDef.styles.header).to.be.eql({"bold": true, "fontSize": 16, "margin": [0, 0, 0, 10]});
-    expect(docDef.styles.subheader).to.be.eql({"bold": true, "fontSize": 14, "margin": [0, 20, 0, 0]});
-    expect(docDef.styles.tableHeader).to.be.eql({"bold": true, "fontSize": 8, "margin": [0, 4, 0, 0]});
-    expect(docDef.styles.table).to.be.eql({"fontSize": 8, "margin": [0, 8, 0, 0]});
-    expect(docDef.styles.attachedTable).to.be.eql({"fontSize": 8});
-    expect(docDef.styles.cell).to.be.eql({"margin": [0, 4, 0, 0]});
-    expect(docDef.styles.cellError).to.be.eql({"margin": [0, 4, 0, 0], "color": "#FF0000"});
-    expect(docDef.styles.cellMoney).to.be.eql({"margin": [0, 4, 0, 0], "alignment": "right"});
-    expect(docDef.styles.cellMoneyError).to.be.eql({"margin": [0, 4, 0, 0], "color": "#FF0000", "alignment": "right"});
-    expect(docDef.styles.footer).to.be.eql({"fontSize": 8});
+    assert.equal(typeof docDef, "object");
+    assert.ok(Array.isArray(docDef.content));
+    assert.deepEqual(docDef.content, []);
+    assert.deepEqual(docDef.pageSize.width, 252);
+    assert.deepEqual(docDef.pageSize.height, "auto");
+    assert.deepEqual(docDef.pageMargins, [10,10,10,10]);
+    assert.deepEqual(docDef.pageOrientation, "portrait");
+    assert.equal(typeof docDef.defaultStyle, "object");
+    assert.deepEqual(docDef.defaultStyle, {"font": "Helvetica", "fontSize": 10, "lineHeight": 1.3});
+    assert.equal(typeof docDef.styles, "object");
+    assert.deepEqual(docDef.styles.header, {"bold": true, "fontSize": 16, "margin": [0, 0, 0, 10]});
+    assert.deepEqual(docDef.styles.subheader, {"bold": true, "fontSize": 14, "margin": [0, 20, 0, 0]});
+    assert.deepEqual(docDef.styles.tableHeader, {"bold": true, "fontSize": 8, "margin": [0, 4, 0, 0]});
+    assert.deepEqual(docDef.styles.table, {"fontSize": 8, "margin": [0, 8, 0, 0]});
+    assert.deepEqual(docDef.styles.attachedTable, {"fontSize": 8});
+    assert.deepEqual(docDef.styles.cell, {"margin": [0, 4, 0, 0]});
+    assert.deepEqual(docDef.styles.cellError, {"margin": [0, 4, 0, 0], "color": "#FF0000"});
+    assert.deepEqual(docDef.styles.cellMoney, {"margin": [0, 4, 0, 0], "alignment": "right"});
+    assert.deepEqual(docDef.styles.cellMoneyError, {"margin": [0, 4, 0, 0], "color": "#FF0000", "alignment": "right"});
+    assert.deepEqual(docDef.styles.footer, {"fontSize": 8});
   });
 
   it("should return an instance of pdf", () => {
     const pdf = require("../src/index");
-    expect(pdf).to.be.an.instanceOf(Object);
+    assert.ok(pdf instanceof Object);
   });
 
   it("should not blow up if the document structure is incorrect", async () => {
@@ -216,14 +218,14 @@ and some more here`,
     const template = pdf.defaultDocumentDefinition();
     template.content.push({"image":"","height":20,"width":60});
     const doc = await pdf.returnPdfBuffer(JSON.stringify(template), data);
-    expect(doc).to.be.an.instanceOf(Buffer);
+    assert.ok(doc instanceof Buffer);
   });
 
     it("should return the document as a buffer", async () => {
     const pdf = require("../src/index");
     const template = pdf.defaultDocumentDefinition();
     const doc = await pdf.returnPdfBuffer(JSON.stringify(template), data);
-    expect(doc).to.be.an.instanceOf(Buffer);
+    assert.ok(doc instanceof Buffer);
   });
 
   it("should merge buffer documents of different page sizes", async () => {
@@ -236,7 +238,7 @@ and some more here`,
     const doc1 = await pdf.returnPdfBuffer(template1, data);
     const doc2 = await pdf.returnPdfBuffer(template2, data);
     const result = await pdf.mergePDFBuffers([doc1, doc2]);
-    expect(result).to.be.an.instanceOf(Buffer);
+    assert.ok(result instanceof Buffer);
   });
 
   it("should load images via https", async () => {
@@ -249,7 +251,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAAeBAMAAAD3Fx6aAAAAG1BMVEX///8/nz9fr1/f79+/379/v3+fz58fjx8AgADFQF6MAAAAAXRSTlMAQObYZgAAAAlwSFlzAAAOxAAADsQBlSsOGwAAApBJREFUSInFlj1v2zAQhmlTtjsabYBq9BAEHtUP2BrVoGg1esigUUGGenRSwNBYx0l0P7u8O1I6Sg0a0DbMgZZeyfdQ5PHlKfVKq4BbXXaf6Dhr+lM1R4fn7pMcsqY/OR3KzpOCuMWJ6Rj9yzXA5mx0nOGXM9KHsDsjPYKafhcf4aHs0/VtVV+5/3yuLrrSgXTN9JHbfRFl4lfqExyEaVt8I4fv5nImpLHL2zqYHvHMx273+fQBh18R/SfRW+kI9CFteBvSxPTpcesJOeBNJqQj0HPYK5zN+k4tKnjy6WY9ton+hVDzImz1rRJSQ+/m7Vvp+prmUPPkjiiOyLqUnbCAKdJrkweexG0NvwPotj0S9pHEOSIFvcAsw9V5aoxBStTGPKpAOn70gKYfCSuPHgMFjvB7eYk8idq6GUcI/dLcvLPzSL+C7lYUf3O2ZCnxMEJsqT1lZpRRtv2R9KiRAd+ZKuVL2PpO/TY6MvSPGJd8/W/62KebYfoSBqho6cLoFK4U9P0r9KRPp/Vf2nwNpBvMJpxuPn12ED01xLWcPkkXhY+je7XQMsBpPPrEpE3eeoefdSI20yMfFwc4TY+eYrb16doldkv3JOMTAU7j0VPjFhO7bZZXibffKy769MOdo3uS8cZ9EFxm3d44LX9DjI7iOS1N7ABPMUuX0jDIaSTdJPEU5/ODomjktKWyfQo7HNWcnZboUipCTFbSFzGNfw5wgycsntR8ZlFvhvOc4XG6aehCGoWuunRatIuJvcZvMbZbJ7Z3b2UNXUipNOtQOm42bSuWUikKmtn+E8svqqW30jHoVDJyVQkX7nJley4hd5mgt9LB9Pr+xt6bivr+ki+/VVjcco/l83uEt/RG+j/9L0R48odC2pi1AAAAAElFTkSuQmCC"
@@ -268,7 +270,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAH0lEQVR42mP8P4PhPwMVAeOogaMGjho4auCogSPVQACqOzPNQ/wwqAAAAABJRU5ErkJggg=="
@@ -290,12 +292,12 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition.content).to.be.eql([
+    assert.deepEqual(documentDefinition.content, [
         {
           "text": "Hello"
         }
       ]);
-      expect(documentDefinition.header(1, 2)).to.be.eql([
+      assert.deepEqual(documentDefinition.header(1, 2), [
         {
           "text": "Page 1 of 2",
           "style": "header"
@@ -316,12 +318,12 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition.content).to.be.eql([
+    assert.deepEqual(documentDefinition.content, [
         {
           "text": "Hello"
         }
       ]);
-      expect(documentDefinition.footer(1, 2)).to.be.eql([
+      assert.deepEqual(documentDefinition.footer(1, 2), [
         {
           "text": "Page 1 of 2",
           "style": "footer"
@@ -339,7 +341,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "DATE / HEURE D'ARRIVÉE:",
         "THIS `` IS `` AWESOME",
@@ -365,7 +367,7 @@ and some more here`,
     data.ticket.total = 0;
     data.ticket.ssrs[0].subTotal = 0;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "Q",
         "GTQ",
@@ -393,7 +395,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "Veintiocho =>with treinta y seis =>cents",
         "Doscientos ochenta y nueve",
@@ -415,7 +417,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(60,60,60);stroke-width:2' /></svg>",
@@ -445,10 +447,10 @@ and some more here`,
     }`;
     try {
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-      expect(1).to.be.eql(2);
+      assert.deepEqual(1, 2);
     } catch (err) {
       //spaces are important in this test
-      expect(err.data).to.be.eql(`{
+      assert.deepEqual(err.data, `{
       "content": [{},
       ]
     }`);
@@ -482,7 +484,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "Mié Ene 19, 2022 8:00 AM",
         "Mié Ene 19, 2022",
@@ -518,7 +520,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3gAAAB4CAYAAACghlDTAAAAAklEQVR4AewaftIAAAPmSURBVO3BsW0EQQwEsJH673mcbnSA8ZlAcpI0H9rmNTN5tc2XmcmrbX4xM/nSNr+Ymbza5jUzebXNl5nJq23+Y2byi7Z5zUxebfOambza5svM5Bdt85qZvNrmy8zk1TZfZiZf2uY1M/mPtvkyM3m1zS9mJq+2ec1MvrTNl5nJq23+Y2byi7Z5zUxebfOamXxpm1/MTF5t85qZvNrmy8zk1TZfZia/aJvXzOTVNl9mJq+2ec1MvrTNl5nJq21+MTP50ja/mJm82uY1M3m1zZeZyattvsxMftE2r5nJq22+zExebfNlZvKlbV4zk/9omy8zk1fbfJmZfGmb18zk1Ta/mJm82uYXM5MvbfOambza5svM5Bdt85qZvNrmy8zk1TZfZiavtnnNTL60zZeZyattfjEz+dI2v5iZvNrmNTN5tc2XmcmXtvkyM/nSNl9mJl/a5jUz+dI2/zEz+Y+2ec1MXm3zmpl82QAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACX8+ALXvFMrcDQAAAABJRU5ErkJggg==",
@@ -547,7 +549,7 @@ and some more here`,
     const d = {
     }
     const documentDefinition = await pdf.toDocumentDefinition(template, d);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "text": ""
@@ -589,7 +591,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "Transaction Id: 5c9f8f8f8f8f8f8f8f8f8f8",
         "=>h","adult and =>adult","child and =>child","person and =>person",{
@@ -653,7 +655,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "1",
         "12/21/2021 11:38 AM",
@@ -688,7 +690,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "12/21/2021",
         "PNA",
@@ -721,7 +723,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "8:53 PM",
         "PNA",
@@ -754,7 +756,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "11:38 AM",
         "PNA",
@@ -766,7 +768,7 @@ and some more here`,
     });
   });
 
-  it("should return a pdf document", (done) => {
+  it("should return a pdf document", async () => {
     const pdf = require("../src/index.js");
     const template = `{
       "content": [
@@ -776,9 +778,11 @@ and some more here`,
         {% t 'french' %}
       ]
     }`;
-    pdf.returnPdfBinary(template, data, (err, doc) => {
-      expect(doc).to.not.equal(undefined);
-      done();
+    await new Promise((resolve) => {
+      pdf.returnPdfBinary(template, data, (_err, doc) => {
+        assert.notEqual(doc, undefined);
+        resolve();
+      });
     });
   });
 
@@ -790,7 +794,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         "Date / heure d'arrivée:"
       ]
@@ -805,7 +809,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "text": "\tSome text \t with tabs \t here"
@@ -822,7 +826,7 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
           "This `` is `` awesome"
       ]
@@ -847,7 +851,7 @@ and some more here`,
       ]
     }`
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    expect(documentDefinition).to.be.eql({
+    assert.deepEqual(documentDefinition, {
       "content": [
         {
           "key1": "isocode",
@@ -863,18 +867,18 @@ and some more here`,
     it("should replace line breaks with two spaces", () => {
       const input = "hello\nworld\r\nend\r\ngoodbye";
       const output = sanitizeJsonString(input);
-      expect(output).to.equal("hello  world  end  goodbye");
+      assert.equal(output, "hello  world  end  goodbye");
     });
 
     it("should remove invisible control characters", () => {
       const input = "hello\u0001world\u001F!";
       const output = sanitizeJsonString(input);
-      expect(output).to.equal("helloworld!");
+      assert.equal(output, "helloworld!");
     });
 
     it("should throw an error if input is not a string (without breaking)", () => {
-      expect(() => sanitizeJsonString(null)).to.throw("INVALID_STRING");
-      expect(() => sanitizeJsonString(123)).to.throw("INVALID_STRING");
+      assert.throws(() => sanitizeJsonString(null), /INVALID_STRING/);
+      assert.throws(() => sanitizeJsonString(123), /INVALID_STRING/);
     });
   });
 });
