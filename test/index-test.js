@@ -775,13 +775,22 @@ and some more here`,
         {%- barcode -%},
         {%- barcode 1234 code128 10 2 10,5,2,4 -%},
         {%- barcode 1234 code128 10 2 10,5 -%},
-        {% t 'french' %}
+        "{% t 'french' %}"
       ]
     }`;
-    await new Promise((resolve) => {
-      pdf.returnPdfBinary(template, data, (_err, doc) => {
-        assert.notEqual(doc, undefined);
-        resolve();
+    await new Promise((resolve, reject) => {
+      pdf.returnPdfBinary(template, data, (err, doc) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        try {
+          assert.notEqual(doc, undefined);
+          resolve();
+        } catch (assertionError) {
+          reject(assertionError);
+        }
       });
     });
   });
