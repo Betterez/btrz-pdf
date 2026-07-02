@@ -1,12 +1,12 @@
 const {createPdfBinary, createPdfKitDocument, defaultDocumentDefinition} = require("./pdf.js");
-const pdfjs = require("pdfjs");
+const pdfjs = require("../pdfjs/lib/index.js");
 const tpl = require("btrz-liquid-templates");
 
 module.exports = {
   async mergePDFBuffers(buffers) {
     const merged = new pdfjs.Document({
       // won't be used, pdfjs just requires a font
-      font: require("pdfjs/font/Helvetica")
+      font: require("../pdfjs/font/Helvetica")
     });
 
     for (const buffer of buffers) {

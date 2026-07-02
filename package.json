@@ -23,14 +23,19 @@
   "dependencies": {
     "@foliojs-fork/linebreak": "1.1.2",
     "@foliojs-fork/pdfkit": "0.15.3",
-    "btrz-liquid-templates": "1.10.0",
-    "pdfjs": "2.5.4",
-    "svg-to-pdfkit": "^0.1.8",
+    "@rkusa/linebreak": "1.0.0",
+    "btrz-liquid-templates": "2.0.1",
+    "inherits": "2.0.4",
+    "opentype.js": "2.0.0",
+    "pako": "3.0.0",
+    "readable-stream": "4.7.0",
+    "svg-to-pdfkit": "0.1.8",
+    "unorm": "1.6.0",
+    "util-deprecate": "1.0.2",
+    "uuid": "14.0.1",
     "written-number": "0.11.1",
-    "xmldoc": "2.0.3"
+    "xmldoc": "3.0.0"
   },
   "devDependencies": {
-    "browserify": "17.0.1",
-    "tinyify": "4.0.0"
   }
 }

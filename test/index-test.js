@@ -1,6 +1,29 @@
 const assert = require("node:assert/strict");
 const { beforeEach, describe, it } = require("node:test");
 
+function assertPngDataUri(imageData) {
+  assert.equal(typeof imageData, "string");
+  assert.match(imageData, /^data:image\/png;base64,[A-Za-z0-9+/]+=*$/);
+}
+
+function normalizeImageAtIndexes(documentDefinition, indexes) {
+  const normalized = JSON.parse(JSON.stringify(documentDefinition));
+
+  indexes.forEach((index) => {
+    if (normalized.content[index]?.image) {
+      normalized.content[index].image = "<png-data-uri>";
+    }
+  });
+
+  return normalized;
+}
+
+function getPdfPageCount(pdfBuffer) {
+  const pdfjs = require("../pdfjs/lib/index.js");
+  const document = new pdfjs.ExternalDocument(pdfBuffer);
+  return document.pageCount;
+}
+
 describe("index.js", () => {
   const { sanitizeJsonString } = require("../src/index.js");
 
@@ -239,6 +262,52 @@ and some more here`,
     const doc2 = await pdf.returnPdfBuffer(template2, data);
     const result = await pdf.mergePDFBuffers([doc1, doc2]);
     assert.ok(result instanceof Buffer);
+  });
+
+  it("should preserve total page count when merging multiple documents", async () => {
+    const pdf = require("../src/index");
+    const onePageTemplate = JSON.stringify({"content": [{"text": "one"}]});
+    const twoPagesTemplate = JSON.stringify({
+      "content": [{"text": "first page"}, {"text": "second page", "pageBreak": "before"}]
+    });
+
+    const onePageDoc = await pdf.returnPdfBuffer(onePageTemplate, data);
+    const twoPagesDoc = await pdf.returnPdfBuffer(twoPagesTemplate, data);
+
+    assert.equal(getPdfPageCount(onePageDoc), 1);
+    assert.equal(getPdfPageCount(twoPagesDoc), 2);
+
+    const merged = await pdf.mergePDFBuffers([onePageDoc, twoPagesDoc]);
+
+    assert.ok(merged instanceof Buffer);
+    assert.equal(getPdfPageCount(merged), 3);
+  });
+
+  it("should keep page count unchanged when merging a single document", async () => {
+    const pdf = require("../src/index");
+    const template = JSON.stringify({
+      "content": [{"text": "page one"}, {"text": "page two", "pageBreak": "before"}]
+    });
+    const doc = await pdf.returnPdfBuffer(template, data);
+
+    const merged = await pdf.mergePDFBuffers([doc]);
+
+    assert.ok(merged instanceof Buffer);
+    assert.equal(getPdfPageCount(doc), 2);
+    assert.equal(getPdfPageCount(merged), 2);
+  });
+
+  it("should throw when trying to merge an invalid pdf buffer", async () => {
+    const pdf = require("../src/index");
+    const invalidBuffer = Buffer.from("not-a-real-pdf");
+
+    await assert.rejects(
+      async () => pdf.mergePDFBuffers([invalidBuffer]),
+      {
+        name: "Error",
+        message: /Invalid PDF/
+      }
+    );
   });
 
   it("should load images via https", async () => {
@@ -520,22 +589,28 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    assert.deepEqual(documentDefinition, {
+    const normalizedDocumentDefinition = normalizeImageAtIndexes(documentDefinition, [0, 1, 2]);
+
+    assert.deepEqual(normalizedDocumentDefinition, {
       "content": [
         {
-          "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3gAAAB4CAYAAACghlDTAAAAAklEQVR4AewaftIAAAPmSURBVO3BsW0EQQwEsJH673mcbnSA8ZlAcpI0H9rmNTN5tc2XmcmrbX4xM/nSNr+Ymbza5jUzebXNl5nJq23+Y2byi7Z5zUxebfOambza5svM5Bdt85qZvNrmy8zk1TZfZiZf2uY1M/mPtvkyM3m1zS9mJq+2ec1MvrTNl5nJq23+Y2byi7Z5zUxebfOamXxpm1/MTF5t85qZvNrmy8zk1TZfZia/aJvXzOTVNl9mJq+2ec1MvrTNl5nJq21+MTP50ja/mJm82uY1M3m1zZeZyattvsxMftE2r5nJq22+zExebfNlZvKlbV4zk/9omy8zk1fbfJmZfGmb18zk1Ta/mJm82uYXM5MvbfOambza5svM5Bdt85qZvNrmy8zk1TZfZiavtnnNTL60zZeZyattfjEz+dI2v5iZvNrmNTN5tc2XmcmXtvkyM/nSNl9mJl/a5jUz+dI2/zEz+Y+2ec1MXm3zmpl82QAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACX8+ALXvFMrcDQAAAABJRU5ErkJggg==",
+          "image": "<png-data-uri>",
           "width": 200,
           "margin": [0,0,0,0]
         },{
-          "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAAAoCAYAAADufVZCAAAAAklEQVR4AewaftIAAADcSURBVO3BsY0EQRDDQKrzz1nvjrXA4R0ZrApQPrTllYRXW74k4Rdt+ZKEV1teSfjSli9J+EVbviTh1ZZfJOHVllcSvrTlF0l4teVLEl5t+ZKE/2jLKwlf2vKLJPyiLa8kvNrySsKXQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMPxSXLk+8Qj8BAAAAAElFTkSuQmCC",
+          "image": "<png-data-uri>",
           "width": 2,
           "margin": [10,5,2,4]
         },{
-          "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAAAoCAYAAADufVZCAAAAAklEQVR4AewaftIAAADcSURBVO3BsY0EQRDDQKrzz1nvjrXA4R0ZrApQPrTllYRXW74k4Rdt+ZKEV1teSfjSli9J+EVbviTh1ZZfJOHVllcSvrTlF0l4teVLEl5t+ZKE/2jLKwlf2vKLJPyiLa8kvNrySsKXQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMPxSXLk+8Qj8BAAAAAElFTkSuQmCC",
+          "image": "<png-data-uri>",
           "width": 2,
           "margin": [0,0,0,0]
         }
       ]
+    });
+
+    [0, 1, 2].forEach((index) => {
+      assertPngDataUri(documentDefinition.content[index].image);
     });
   });
 
@@ -591,7 +666,9 @@ and some more here`,
       ]
     }`;
     const documentDefinition = await pdf.toDocumentDefinition(template, data);
-    assert.deepEqual(documentDefinition, {
+    const normalizedDocumentDefinition = normalizeImageAtIndexes(documentDefinition, [7, 8]);
+
+    assert.deepEqual(normalizedDocumentDefinition, {
       "content": [
         "Transaction Id: 5c9f8f8f8f8f8f8f8f8f8f8",
         "=>h","adult and =>adult","child and =>child","person and =>person",{
@@ -601,11 +678,11 @@ and some more here`,
         "svg": "<svg height='2' width='100'><line x1='0' y1='0' x2='1000' y2='0' style='stroke:rgb(0,0,0);stroke-width:1' /></svg>",
         "width": 500
       },{
-        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3gAAAB4CAYAAACghlDTAAAAAklEQVR4AewaftIAAAPmSURBVO3BsW0EQQwEsJH673mcbnSA8ZlAcpI0H9rmNTN5tc2XmcmrbX4xM/nSNr+Ymbza5jUzebXNl5nJq23+Y2byi7Z5zUxebfOambza5svM5Bdt85qZvNrmy8zk1TZfZiZf2uY1M/mPtvkyM3m1zS9mJq+2ec1MvrTNl5nJq23+Y2byi7Z5zUxebfOamXxpm1/MTF5t85qZvNrmy8zk1TZfZia/aJvXzOTVNl9mJq+2ec1MvrTNl5nJq21+MTP50ja/mJm82uY1M3m1zZeZyattvsxMftE2r5nJq22+zExebfNlZvKlbV4zk/9omy8zk1fbfJmZfGmb18zk1Ta/mJm82uYXM5MvbfOambza5svM5Bdt85qZvNrmy8zk1TZfZiavtnnNTL60zZeZyattfjEz+dI2v5iZvNrmNTN5tc2XmcmXtvkyM/nSNl9mJl/a5jUz+dI2/zEz+Y+2ec1MXm3zmpl82QAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACRsAAABO2AAAAHDCBgAAgBM2AAAAnLABAADghA0AAAAnbAAAADhhAwAAwAkbAAAATtgAAABwwgYAAIATNgAAAJywAQAA4IQNAAAAJ2wAAAA4YQMAAMAJGwAAAE7YAAAAcMIGAACAEzYAAACcsAEAAOCEDQAAACdsAAAAOGEDAADACX8+ALXvFMrcDQAAAABJRU5ErkJggg==",
+        "image": "<png-data-uri>",
         "width": 200,
         "margin": [0,0,0,0]
       },{
-        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAAAoCAYAAADufVZCAAAAAklEQVR4AewaftIAAADcSURBVO3BsY0EQRDDQKrzz1nvjrXA4R0ZrApQPrTllYRXW74k4Rdt+ZKEV1teSfjSli9J+EVbviTh1ZZfJOHVllcSvrTlF0l4teVLEl5t+ZKE/2jLKwlf2vKLJPyiLa8kvNrySsKXQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMQ9KMPxSXLk+8Qj8BAAAAAElFTkSuQmCC",
+        "image": "<png-data-uri>",
         "width": 2,
         "margin": [10,5,2,4]
       },{"style": "header", "text": "Hello"},{"text": ""},{"text": "something"},{"text": ""},{"bold": true, "text": "html"},{"text": ""},{"italics": true, "text": "Italix"},
@@ -622,6 +699,10 @@ and some more here`,
         {"text": "something here"},{"text": "and some more here"},{"text": "and some more here"},
         {"text": "something here", "style": "small"},{"text": "and some more here", "style": "small"},{"text": "and some more here", "style": "small"}
       ]
+    });
+
+    [7, 8].forEach((index) => {
+      assertPngDataUri(documentDefinition.content[index].image);
     });
   });
 
