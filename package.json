@@ -25,7 +25,7 @@
     "@foliojs-fork/linebreak": "1.1.2",
     "@foliojs-fork/pdfkit": "0.15.3",
     "@rkusa/linebreak": "1.0.0",
-    "btrz-liquid-templates": "2.2.0",
+    "btrz-liquid-templates": "2.3.0",
     "inherits": "2.0.4",
     "opentype.js": "2.0.0",
     "pako": "3.0.0",
